@@ -2143,3 +2143,5 @@ resource "aws_servicequotas_service_quota" "ServiceQuotasServiceQuota5" {
     service_code = "vpc"
     value = 10
 }
+
+

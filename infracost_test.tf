@@ -1,4 +1,3 @@
-
 terraform {
     required_providers {
         aws = {
@@ -9,38 +8,118 @@ terraform {
 }
 
 provider "aws" {
-    region = "us-east-1"
+    region = "ap-northeast-2"
 }
 
 resource "aws_iam_user" "IAMUser" {
     path = "/"
-    name = "admin"
-    tags = {}
+    name = "aws-nuke-user"
+    tags = {
+        AKIATJM26FHKDN6SOJNW = "aws-nuke-user"
+    }
 }
 
 resource "aws_iam_user" "IAMUser2" {
     path = "/"
-    name = "test"
-    tags = {}
+    name = "park"
+    tags = {
+        AKIATJM26FHKGCC6N57X = "aws"
+    }
 }
 
 resource "aws_iam_role" "IAMRole" {
     path = "/"
-    name = "BastionAdminRole"
-    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+    name = "day3-cluster-karpenter"
+    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"pods.eks.amazonaws.com\"},\"Action\":[\"sts:AssumeRole\",\"sts:TagSession\"]}]}"
     max_session_duration = 3600
     tags = {}
 }
 
 resource "aws_iam_role" "IAMRole2" {
     path = "/"
-    name = "ECSCodeDeployRole"
-    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"codedeploy.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+    name = "day3-bastion-role-apne2"
+    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
     max_session_duration = 3600
     tags = {}
 }
 
 resource "aws_iam_role" "IAMRole3" {
+    path = "/"
+    name = "eksctl-day3-cluster-addon-iamserviceaccount-k-Role1-BhW7WdLAZGXZ"
+    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Federated\":\"arn:aws:iam::226347592148:oidc-provider/oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E\"},\"Action\":\"sts:AssumeRoleWithWebIdentity\",\"Condition\":{\"StringEquals\":{\"oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E:sub\":\"system:serviceaccount:kube-system:ebs-csi-controller-sa\",\"oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E:aud\":\"sts.amazonaws.com\"}}}]}"
+    max_session_duration = 3600
+    tags = {
+        alpha.eksctl.io/cluster-name = "day3-cluster"
+        alpha.eksctl.io/iamserviceaccount-name = "kube-system/ebs-csi-controller-sa"
+        alpha.eksctl.io/eksctl-version = "0.202.0"
+        eksctl.cluster.k8s.io/v1alpha1/cluster-name = "day3-cluster"
+    }
+}
+
+resource "aws_iam_role" "IAMRole4" {
+    path = "/"
+    name = "eksctl-day3-cluster-addon-iamserviceaccount-k-Role1-G5omCC05XLbu"
+    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Federated\":\"arn:aws:iam::226347592148:oidc-provider/oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E\"},\"Action\":\"sts:AssumeRoleWithWebIdentity\",\"Condition\":{\"StringEquals\":{\"oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E:sub\":\"system:serviceaccount:kube-system:aws-load-balancer-controller\",\"oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E:aud\":\"sts.amazonaws.com\"}}}]}"
+    max_session_duration = 3600
+    tags = {
+        alpha.eksctl.io/cluster-name = "day3-cluster"
+        alpha.eksctl.io/iamserviceaccount-name = "kube-system/aws-load-balancer-controller"
+        alpha.eksctl.io/eksctl-version = "0.202.0"
+        eksctl.cluster.k8s.io/v1alpha1/cluster-name = "day3-cluster"
+    }
+}
+
+resource "aws_iam_role" "IAMRole5" {
+    path = "/"
+    name = "eksctl-day3-cluster-addon-vpc-cni-Role1-NtKzPpj5LSmo"
+    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Federated\":\"arn:aws:iam::226347592148:oidc-provider/oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E\"},\"Action\":\"sts:AssumeRoleWithWebIdentity\",\"Condition\":{\"StringEquals\":{\"oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E:sub\":\"system:serviceaccount:kube-system:aws-node\",\"oidc.eks.ap-northeast-2.amazonaws.com/id/47779322EE22F694FA50A795CCC9859E:aud\":\"sts.amazonaws.com\"}}}]}"
+    max_session_duration = 3600
+    tags = {
+        alpha.eksctl.io/cluster-name = "day3-cluster"
+        alpha.eksctl.io/eksctl-version = "0.202.0"
+        alpha.eksctl.io/addon-name = "vpc-cni"
+        eksctl.cluster.k8s.io/v1alpha1/cluster-name = "day3-cluster"
+    }
+}
+
+resource "aws_iam_role" "IAMRole6" {
+    path = "/"
+    name = "eksctl-day3-cluster-cluster-ServiceRole-xnt9HyMtYWYi"
+    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"eks.amazonaws.com\"},\"Action\":[\"sts:AssumeRole\",\"sts:TagSession\"]}]}"
+    max_session_duration = 3600
+    tags = {
+        alpha.eksctl.io/cluster-oidc-enabled = "true"
+        alpha.eksctl.io/cluster-name = "day3-cluster"
+        alpha.eksctl.io/eksctl-version = "0.202.0"
+        eksctl.cluster.k8s.io/v1alpha1/cluster-name = "day3-cluster"
+        Name = "eksctl-day3-cluster-cluster/ServiceRole"
+    }
+}
+
+resource "aws_iam_role" "IAMRole7" {
+    path = "/"
+    name = "KarpenterNodeRole-day3-cluster"
+    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+    max_session_duration = 3600
+    tags = {}
+}
+
+resource "aws_iam_role" "IAMRole8" {
+    path = "/"
+    name = "eksctl-day3-cluster-nodegroup-day3-NodeInstanceRole-0ORrJEv35TsZ"
+    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+    max_session_duration = 3600
+    tags = {
+        alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+        alpha.eksctl.io/cluster-name = "day3-cluster"
+        eksctl.cluster.k8s.io/v1alpha1/cluster-name = "day3-cluster"
+        alpha.eksctl.io/nodegroup-type = "managed"
+        alpha.eksctl.io/eksctl-version = "0.202.0"
+        Name = "eksctl-day3-cluster-nodegroup-day3-app-ng/NodeInstanceRole"
+    }
+}
+
+resource "aws_iam_role" "IAMRole9" {
     path = "/"
     name = "rds-monitoring-role"
     assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"monitoring.rds.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
@@ -48,193 +127,497 @@ resource "aws_iam_role" "IAMRole3" {
     tags = {}
 }
 
-resource "aws_iam_role" "IAMRole4" {
-    path = "/"
-    name = "ecsTaskExecutionRole"
-    assume_role_policy = "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ecs-tasks.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
-    max_session_duration = 3600
-    tags = {}
-}
-
-resource "aws_iam_role" "IAMRole5" {
-    path = "/service-role/"
-    name = "rds-proxy-role-1734138352532"
-    assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"rds.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
-    max_session_duration = 3600
-    tags = {}
-}
-
 resource "aws_iam_service_linked_role" "IAMServiceLinkedRole" {
-    aws_service_name = "eks.amazonaws.com"
-    description = "Allows Amazon EKS to call AWS services on your behalf."
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole2" {
     aws_service_name = "eks-nodegroup.amazonaws.com"
     description = "This policy allows Amazon EKS to create and manage Nodegroups"
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole3" {
-    aws_service_name = "ops.apigateway.amazonaws.com"
-    description = "The Service Linked Role is used by Amazon API Gateway."
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole4" {
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole2" {
     aws_service_name = "ecs.application-autoscaling.amazonaws.com"
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole5" {
-    aws_service_name = "mgn.amazonaws.com"
-    description = "Access role for the mgn.amazonaws.com"
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole3" {
+    aws_service_name = "eks.amazonaws.com"
+    description = "Allows Amazon EKS to call AWS services on your behalf."
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole6" {
-    aws_service_name = "apprunner.amazonaws.com"
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole7" {
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole4" {
     aws_service_name = "autoscaling.amazonaws.com"
     description = "Default Service-Linked Role enables access to AWS Services and Resources used or managed by Auto Scaling"
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole8" {
-    aws_service_name = "compute-optimizer.amazonaws.com"
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole5" {
+    aws_service_name = "cost-optimization-hub.bcm.amazonaws.com"
+    description = "Allows Cost Optimization Hub to retrieve organization information and collect optimization-related data and metadata."
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole9" {
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole6" {
+    aws_service_name = "replication.ecr.amazonaws.com"
+}
+
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole7" {
     aws_service_name = "devops-guru.amazonaws.com"
     description = "AWS service role used to execute actions on your behalf."
 }
 
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole8" {
+    aws_service_name = "ecs.amazonaws.com"
+    description = "Policy to enable Amazon ECS to manage your EC2 instances and related resources."
+}
+
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole9" {
+    aws_service_name = "license-manager.amazonaws.com"
+}
+
 resource "aws_iam_service_linked_role" "IAMServiceLinkedRole10" {
-    aws_service_name = "ec2-instance-connect.amazonaws.com"
-    description = "The Service Linked Role used by EC2 Instance Connect Endpoint."
+    aws_service_name = "compute-optimizer.amazonaws.com"
 }
 
 resource "aws_iam_service_linked_role" "IAMServiceLinkedRole11" {
-    aws_service_name = "spot.amazonaws.com"
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole12" {
-    aws_service_name = "replication.ecr.amazonaws.com"
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole13" {
-    aws_service_name = "ecs.amazonaws.com"
-    description = "Role to enable Amazon ECS to manage your cluster."
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole14" {
     aws_service_name = "elasticache.amazonaws.com"
     description = "This policy allows ElastiCache to manage AWS resources on your behalf as necessary for managing your cache."
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole15" {
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole12" {
     aws_service_name = "elasticloadbalancing.amazonaws.com"
     description = "Allows ELB to call AWS services on your behalf."
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole16" {
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole13" {
     aws_service_name = "globalaccelerator.amazonaws.com"
     description = "Allows Global Accelerator to call AWS services on customer's behalf"
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole17" {
-    aws_service_name = "internetmonitor.amazonaws.com"
-    description = "A service-linked role required for CloudWatch Internet Monitor to access your resources."
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole18" {
-    aws_service_name = "ipam.amazonaws.com"
-    description = "The Service Linked Role used by AWS IPAM."
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole19" {
-    aws_service_name = "kafka.amazonaws.com"
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole20" {
-    aws_service_name = "route53resolver.amazonaws.com"
-}
-
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole21" {
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole14" {
     aws_service_name = "organizations.amazonaws.com"
     description = "Service-linked role used by AWS Organizations to enable integration of other AWS services with Organizations."
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole22" {
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole15" {
+    aws_service_name = "profile.amazonaws.com"
+    custom_suffix = "c7b4b43e0d8c4596a89e8df4ee7d928f"
+    description = "Allows Amazon Connect Customer Profiles to access AWS services and resources on your behalf."
+}
+
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole16" {
     aws_service_name = "rds.amazonaws.com"
     description = "Allows Amazon RDS to manage AWS resources on your behalf"
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole23" {
+resource "aws_iam_service_linked_role" "IAMServiceLinkedRole17" {
     aws_service_name = "sso.amazonaws.com"
     description = "Service-linked role used by AWS SSO to manage AWS resources, including IAM roles, policies and SAML IdP on your behalf."
 }
 
-resource "aws_iam_service_linked_role" "IAMServiceLinkedRole24" {
-    aws_service_name = "vpc-lattice.amazonaws.com"
-    description = "Allows Mercury to call AWS services on behalf of customers"
-}
-
 resource "aws_iam_policy" "IAMManagedPolicy" {
-    name = "rds-proxy-policy-1734138352532"
-    path = "/service-role/"
+    name = "KarpenterControllerPolicy-day3-cluster"
+    path = "/"
     policy = <<EOF
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "GetSecretValue",
-            "Action": [
-                "secretsmanager:GetSecretValue"
-            ],
-            "Effect": "Allow",
-            "Resource": [
-                "arn:aws:secretsmanager:us-east-1:950274644703:secret:rds-db-credentials/db-YKLLNPM5VP3FJ3EOZ3CDGHWOME/root/1734138350766-xwhCXX"
-            ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowScopedEC2InstanceAccessActions",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:ec2:ap-northeast-2::image/*",
+        "arn:aws:ec2:ap-northeast-2::snapshot/*",
+        "arn:aws:ec2:ap-northeast-2:*:security-group/*",
+        "arn:aws:ec2:ap-northeast-2:*:subnet/*"
+      ],
+      "Action": [
+        "ec2:RunInstances",
+        "ec2:CreateFleet"
+      ]
+    },
+    {
+      "Sid": "AllowScopedEC2LaunchTemplateAccessActions",
+      "Effect": "Allow",
+      "Resource": "arn:aws:ec2:ap-northeast-2:*:launch-template/*",
+      "Action": [
+        "ec2:RunInstances",
+        "ec2:CreateFleet"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "aws:ResourceTag/kubernetes.io/cluster/day3-cluster": "owned"
         },
-        {
-            "Sid": "DecryptSecretValue",
-            "Action": [
-                "kms:Decrypt"
-            ],
-            "Effect": "Allow",
-            "Resource": [
-                "arn:aws:kms:us-east-1:950274644703:key/5a0a4ff1-8cf0-4ba1-b572-16e4a7a2ef3e"
-            ],
-            "Condition": {
-                "StringEquals": {
-                    "kms:ViaService": "secretsmanager.us-east-1.amazonaws.com"
-                }
-            }
+        "StringLike": {
+          "aws:ResourceTag/karpenter.sh/nodepool": "*"
         }
-    ]
+      }
+    },
+    {
+      "Sid": "AllowScopedEC2InstanceActionsWithTags",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:ec2:ap-northeast-2:*:fleet/*",
+        "arn:aws:ec2:ap-northeast-2:*:instance/*",
+        "arn:aws:ec2:ap-northeast-2:*:volume/*",
+        "arn:aws:ec2:ap-northeast-2:*:network-interface/*",
+        "arn:aws:ec2:ap-northeast-2:*:launch-template/*",
+        "arn:aws:ec2:ap-northeast-2:*:spot-instances-request/*"
+      ],
+      "Action": [
+        "ec2:RunInstances",
+        "ec2:CreateFleet",
+        "ec2:CreateLaunchTemplate"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestTag/kubernetes.io/cluster/day3-cluster": "owned",
+          "aws:RequestTag/eks:eks-cluster-name": "day3-cluster"
+        },
+        "StringLike": {
+          "aws:RequestTag/karpenter.sh/nodepool": "*"
+        }
+      }
+    },
+    {
+      "Sid": "AllowScopedResourceCreationTagging",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:ec2:ap-northeast-2:*:fleet/*",
+        "arn:aws:ec2:ap-northeast-2:*:instance/*",
+        "arn:aws:ec2:ap-northeast-2:*:volume/*",
+        "arn:aws:ec2:ap-northeast-2:*:network-interface/*",
+        "arn:aws:ec2:ap-northeast-2:*:launch-template/*",
+        "arn:aws:ec2:ap-northeast-2:*:spot-instances-request/*"
+      ],
+      "Action": "ec2:CreateTags",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestTag/kubernetes.io/cluster/day3-cluster": "owned",
+          "aws:RequestTag/eks:eks-cluster-name": "day3-cluster",
+          "ec2:CreateAction": [
+            "RunInstances",
+            "CreateFleet",
+            "CreateLaunchTemplate"
+          ]
+        },
+        "StringLike": {
+          "aws:RequestTag/karpenter.sh/nodepool": "*"
+        }
+      }
+    },
+    {
+      "Sid": "AllowScopedResourceTagging",
+      "Effect": "Allow",
+      "Resource": "arn:aws:ec2:ap-northeast-2:*:instance/*",
+      "Action": "ec2:CreateTags",
+      "Condition": {
+        "StringEquals": {
+          "aws:ResourceTag/kubernetes.io/cluster/day3-cluster": "owned"
+        },
+        "StringLike": {
+          "aws:ResourceTag/karpenter.sh/nodepool": "*"
+        },
+        "StringEqualsIfExists": {
+          "aws:RequestTag/eks:eks-cluster-name": "day3-cluster"
+        },
+        "ForAllValues:StringEquals": {
+          "aws:TagKeys": [
+            "eks:eks-cluster-name",
+            "karpenter.sh/nodeclaim",
+            "Name"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "AllowScopedDeletion",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:ec2:ap-northeast-2:*:instance/*",
+        "arn:aws:ec2:ap-northeast-2:*:launch-template/*"
+      ],
+      "Action": [
+        "ec2:TerminateInstances",
+        "ec2:DeleteLaunchTemplate"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "aws:ResourceTag/kubernetes.io/cluster/day3-cluster": "owned"
+        },
+        "StringLike": {
+          "aws:ResourceTag/karpenter.sh/nodepool": "*"
+        }
+      }
+    },
+    {
+      "Sid": "AllowRegionalReadActions",
+      "Effect": "Allow",
+      "Resource": "*",
+      "Action": [
+        "ec2:DescribeImages",
+        "ec2:DescribeInstances",
+        "ec2:DescribeInstanceTypeOfferings",
+        "ec2:DescribeInstanceTypes",
+        "ec2:DescribeLaunchTemplates",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSpotPriceHistory",
+        "ec2:DescribeSubnets"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "ap-northeast-2"
+        }
+      }
+    },
+    {
+      "Sid": "AllowSSMReadActions",
+      "Effect": "Allow",
+      "Resource": "arn:aws:ssm:ap-northeast-2::parameter/aws/service/*",
+      "Action": "ssm:GetParameter"
+    },
+    {
+      "Sid": "AllowPricingReadActions",
+      "Effect": "Allow",
+      "Resource": "*",
+      "Action": "pricing:GetProducts"
+    },
+    {
+      "Sid": "AllowInterruptionQueueActions",
+      "Effect": "Allow",
+      "Resource": "arn:aws:sqs:ap-northeast-2:226347592148:day3-cluster",
+      "Action": [
+        "sqs:DeleteMessage",
+        "sqs:GetQueueUrl",
+        "sqs:ReceiveMessage"
+      ]
+    },
+    {
+      "Sid": "AllowPassingInstanceRole",
+      "Effect": "Allow",
+      "Resource": "arn:aws:iam::226347592148:role/KarpenterNodeRole-day3-cluster",
+      "Action": "iam:PassRole",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": [
+            "ec2.amazonaws.com",
+            "ec2.amazonaws.com.cn"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "AllowScopedInstanceProfileCreationActions",
+      "Effect": "Allow",
+      "Resource": "arn:aws:iam::226347592148:instance-profile/*",
+      "Action": [
+        "iam:CreateInstanceProfile"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestTag/kubernetes.io/cluster/day3-cluster": "owned",
+          "aws:RequestTag/eks:eks-cluster-name": "day3-cluster",
+          "aws:RequestTag/topology.kubernetes.io/region": "ap-northeast-2"
+        },
+        "StringLike": {
+          "aws:RequestTag/karpenter.k8s.aws/ec2nodeclass": "*"
+        }
+      }
+    },
+    {
+      "Sid": "AllowScopedInstanceProfileTagActions",
+      "Effect": "Allow",
+      "Resource": "arn:aws:iam::226347592148:instance-profile/*",
+      "Action": [
+        "iam:TagInstanceProfile"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "aws:ResourceTag/kubernetes.io/cluster/day3-cluster": "owned",
+          "aws:ResourceTag/topology.kubernetes.io/region": "ap-northeast-2",
+          "aws:RequestTag/kubernetes.io/cluster/day3-cluster": "owned",
+          "aws:RequestTag/eks:eks-cluster-name": "day3-cluster",
+          "aws:RequestTag/topology.kubernetes.io/region": "ap-northeast-2"
+        },
+        "StringLike": {
+          "aws:ResourceTag/karpenter.k8s.aws/ec2nodeclass": "*",
+          "aws:RequestTag/karpenter.k8s.aws/ec2nodeclass": "*"
+        }
+      }
+    },
+    {
+      "Sid": "AllowScopedInstanceProfileActions",
+      "Effect": "Allow",
+      "Resource": "arn:aws:iam::226347592148:instance-profile/*",
+      "Action": [
+        "iam:AddRoleToInstanceProfile",
+        "iam:RemoveRoleFromInstanceProfile",
+        "iam:DeleteInstanceProfile"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "aws:ResourceTag/kubernetes.io/cluster/day3-cluster": "owned",
+          "aws:ResourceTag/topology.kubernetes.io/region": "ap-northeast-2"
+        },
+        "StringLike": {
+          "aws:ResourceTag/karpenter.k8s.aws/ec2nodeclass": "*"
+        }
+      }
+    },
+    {
+      "Sid": "AllowInstanceProfileReadActions",
+      "Effect": "Allow",
+      "Resource": "arn:aws:iam::226347592148:instance-profile/*",
+      "Action": "iam:GetInstanceProfile"
+    },
+    {
+      "Sid": "AllowAPIServerEndpointDiscovery",
+      "Effect": "Allow",
+      "Resource": "arn:aws:eks:ap-northeast-2:226347592148:cluster/day3-cluster",
+      "Action": "eks:DescribeCluster"
+    }
+  ]
 }
+
 EOF
+}
+
+resource "aws_iam_role_policy" "IAMPolicy" {
+    policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"ec2:CreateSnapshot\",\"ec2:AttachVolume\",\"ec2:DetachVolume\",\"ec2:ModifyVolume\",\"ec2:DescribeAvailabilityZones\",\"ec2:DescribeInstances\",\"ec2:DescribeSnapshots\",\"ec2:DescribeTags\",\"ec2:DescribeVolumes\",\"ec2:DescribeVolumesModifications\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringEquals\":{\"ec2:CreateAction\":[\"CreateVolume\",\"CreateSnapshot\"]}},\"Action\":[\"ec2:CreateTags\"],\"Resource\":[\"arn:aws:ec2:*:*:volume/*\",\"arn:aws:ec2:*:*:snapshot/*\"],\"Effect\":\"Allow\"},{\"Action\":[\"ec2:DeleteTags\"],\"Resource\":[\"arn:aws:ec2:*:*:volume/*\",\"arn:aws:ec2:*:*:snapshot/*\"],\"Effect\":\"Allow\"},{\"Condition\":{\"StringLike\":{\"aws:RequestTag/ebs.csi.aws.com/cluster\":\"true\"}},\"Action\":[\"ec2:CreateVolume\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringLike\":{\"aws:RequestTag/CSIVolumeName\":\"*\"}},\"Action\":[\"ec2:CreateVolume\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringLike\":{\"ec2:ResourceTag/ebs.csi.aws.com/cluster\":\"true\"}},\"Action\":[\"ec2:DeleteVolume\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringLike\":{\"ec2:ResourceTag/CSIVolumeName\":\"*\"}},\"Action\":[\"ec2:DeleteVolume\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringLike\":{\"ec2:ResourceTag/kubernetes.io/created-for/pvc/name\":\"*\"}},\"Action\":[\"ec2:DeleteVolume\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringLike\":{\"ec2:ResourceTag/CSIVolumeSnapshotName\":\"*\"}},\"Action\":[\"ec2:DeleteSnapshot\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringLike\":{\"ec2:ResourceTag/ebs.csi.aws.com/cluster\":\"true\"}},\"Action\":[\"ec2:DeleteSnapshot\"],\"Resource\":\"*\",\"Effect\":\"Allow\"}]}"
+    role = "${aws_iam_role.IAMRole3.name}"
+}
+
+resource "aws_iam_role_policy" "IAMPolicy2" {
+    policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Condition\":{\"StringEquals\":{\"iam:AWSServiceName\":\"elasticloadbalancing.amazonaws.com\"}},\"Action\":[\"iam:CreateServiceLinkedRole\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Action\":[\"ec2:DescribeAccountAttributes\",\"ec2:DescribeAddresses\",\"ec2:DescribeAvailabilityZones\",\"ec2:DescribeInternetGateways\",\"ec2:DescribeVpcs\",\"ec2:DescribeVpcPeeringConnections\",\"ec2:DescribeSubnets\",\"ec2:DescribeSecurityGroups\",\"ec2:DescribeInstances\",\"ec2:DescribeNetworkInterfaces\",\"ec2:DescribeTags\",\"ec2:GetCoipPoolUsage\",\"ec2:DescribeCoipPools\",\"elasticloadbalancing:DescribeLoadBalancers\",\"elasticloadbalancing:DescribeLoadBalancerAttributes\",\"elasticloadbalancing:DescribeListeners\",\"elasticloadbalancing:DescribeListenerAttributes\",\"elasticloadbalancing:DescribeListenerCertificates\",\"elasticloadbalancing:DescribeSSLPolicies\",\"elasticloadbalancing:DescribeRules\",\"elasticloadbalancing:DescribeTargetGroups\",\"elasticloadbalancing:DescribeTargetGroupAttributes\",\"elasticloadbalancing:DescribeTargetHealth\",\"elasticloadbalancing:DescribeTags\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Action\":[\"cognito-idp:DescribeUserPoolClient\",\"acm:ListCertificates\",\"acm:DescribeCertificate\",\"iam:ListServerCertificates\",\"iam:GetServerCertificate\",\"waf-regional:GetWebACL\",\"waf-regional:GetWebACLForResource\",\"waf-regional:AssociateWebACL\",\"waf-regional:DisassociateWebACL\",\"wafv2:GetWebACL\",\"wafv2:GetWebACLForResource\",\"wafv2:AssociateWebACL\",\"wafv2:DisassociateWebACL\",\"shield:GetSubscriptionState\",\"shield:DescribeProtection\",\"shield:CreateProtection\",\"shield:DeleteProtection\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Action\":[\"ec2:AuthorizeSecurityGroupIngress\",\"ec2:RevokeSecurityGroupIngress\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Action\":[\"ec2:CreateSecurityGroup\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringEquals\":{\"ec2:CreateAction\":\"CreateSecurityGroup\"},\"Null\":{\"aws:RequestTag/elbv2.k8s.aws/cluster\":\"false\"}},\"Action\":[\"ec2:CreateTags\"],\"Resource\":\"arn:aws:ec2:*:*:security-group/*\",\"Effect\":\"Allow\"},{\"Condition\":{\"Null\":{\"aws:RequestTag/elbv2.k8s.aws/cluster\":\"true\",\"aws:ResourceTag/elbv2.k8s.aws/cluster\":\"false\"}},\"Action\":[\"ec2:CreateTags\",\"ec2:DeleteTags\"],\"Resource\":\"arn:aws:ec2:*:*:security-group/*\",\"Effect\":\"Allow\"},{\"Condition\":{\"Null\":{\"aws:ResourceTag/elbv2.k8s.aws/cluster\":\"false\"}},\"Action\":[\"ec2:AuthorizeSecurityGroupIngress\",\"ec2:RevokeSecurityGroupIngress\",\"ec2:DeleteSecurityGroup\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"Null\":{\"aws:RequestTag/elbv2.k8s.aws/cluster\":\"false\"}},\"Action\":[\"elasticloadbalancing:CreateLoadBalancer\",\"elasticloadbalancing:CreateTargetGroup\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Action\":[\"elasticloadbalancing:CreateListener\",\"elasticloadbalancing:DeleteListener\",\"elasticloadbalancing:CreateRule\",\"elasticloadbalancing:DeleteRule\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"Null\":{\"aws:RequestTag/elbv2.k8s.aws/cluster\":\"true\",\"aws:ResourceTag/elbv2.k8s.aws/cluster\":\"false\"}},\"Action\":[\"elasticloadbalancing:AddTags\",\"elasticloadbalancing:RemoveTags\"],\"Resource\":[\"arn:aws:elasticloadbalancing:*:*:targetgroup/*/*\",\"arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*\",\"arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*\"],\"Effect\":\"Allow\"},{\"Action\":[\"elasticloadbalancing:AddTags\",\"elasticloadbalancing:RemoveTags\"],\"Resource\":[\"arn:aws:elasticloadbalancing:*:*:listener/net/*/*/*\",\"arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*\",\"arn:aws:elasticloadbalancing:*:*:listener-rule/net/*/*/*\",\"arn:aws:elasticloadbalancing:*:*:listener-rule/app/*/*/*\"],\"Effect\":\"Allow\"},{\"Condition\":{\"Null\":{\"aws:ResourceTag/elbv2.k8s.aws/cluster\":\"false\"}},\"Action\":[\"elasticloadbalancing:ModifyListenerAttributes\",\"elasticloadbalancing:ModifyLoadBalancerAttributes\",\"elasticloadbalancing:SetIpAddressType\",\"elasticloadbalancing:SetSecurityGroups\",\"elasticloadbalancing:SetSubnets\",\"elasticloadbalancing:DeleteLoadBalancer\",\"elasticloadbalancing:ModifyTargetGroup\",\"elasticloadbalancing:ModifyTargetGroupAttributes\",\"elasticloadbalancing:DeleteTargetGroup\"],\"Resource\":\"*\",\"Effect\":\"Allow\"},{\"Condition\":{\"StringEquals\":{\"elasticloadbalancing:CreateAction\":[\"CreateTargetGroup\",\"CreateLoadBalancer\"]},\"Null\":{\"aws:RequestTag/elbv2.k8s.aws/cluster\":\"false\"}},\"Action\":[\"elasticloadbalancing:AddTags\"],\"Resource\":[\"arn:aws:elasticloadbalancing:*:*:targetgroup/*/*\",\"arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*\",\"arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*\"],\"Effect\":\"Allow\"},{\"Action\":[\"elasticloadbalancing:RegisterTargets\",\"elasticloadbalancing:DeregisterTargets\"],\"Resource\":\"arn:aws:elasticloadbalancing:*:*:targetgroup/*/*\",\"Effect\":\"Allow\"},{\"Action\":[\"elasticloadbalancing:SetWebAcl\",\"elasticloadbalancing:ModifyListener\",\"elasticloadbalancing:AddListenerCertificates\",\"elasticloadbalancing:RemoveListenerCertificates\",\"elasticloadbalancing:ModifyRule\"],\"Resource\":\"*\",\"Effect\":\"Allow\"}]}"
+    role = "${aws_iam_role.IAMRole4.name}"
 }
 
 resource "aws_iam_instance_profile" "IAMInstanceProfile" {
     path = "/"
-    name = "${aws_iam_role.IAMRole.name}"
+    name = "${aws_iam_role.IAMRole2.name}"
     roles = [
-        "${aws_iam_role.IAMRole.name}"
+        "${aws_iam_role.IAMRole2.name}"
+    ]
+}
+
+resource "aws_iam_instance_profile" "IAMInstanceProfile2" {
+    path = "/"
+    name = "day3-cluster_11693340466802365569"
+    roles = [
+        "${aws_iam_role.IAMRole7.name}"
+    ]
+}
+
+resource "aws_iam_instance_profile" "IAMInstanceProfile3" {
+    path = "/"
+    name = "eks-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+    roles = [
+        "${aws_iam_role.IAMRole8.name}"
     ]
 }
 
 resource "aws_iam_access_key" "IAMAccessKey" {
     status = "Active"
-    user = "admin"
+    user = "aws-nuke-user"
 }
 
 resource "aws_iam_access_key" "IAMAccessKey2" {
     status = "Active"
-    user = "admin"
+    user = "park"
 }
 
 resource "aws_iam_access_key" "IAMAccessKey3" {
     status = "Active"
-    user = "test"
+    user = "park"
+}
+
+resource "aws_kms_key" "KMSKey" {
+    is_enabled = false
+    description = ""
+    key_usage = "ENCRYPT_DECRYPT"
+    policy = <<EOF
+{
+  "Version" : "2012-10-17",
+  "Id" : "key-consolepolicy-3",
+  "Statement" : [ {
+    "Sid" : "Enable IAM User Permissions",
+    "Effect" : "Allow",
+    "Principal" : {
+      "AWS" : "arn:aws:iam::226347592148:root"
+    },
+    "Action" : "kms:*",
+    "Resource" : "*"
+  } ]
+}
+EOF
+}
+
+resource "aws_kms_key" "KMSKey2" {
+    is_enabled = false
+    description = ""
+    key_usage = "ENCRYPT_DECRYPT"
+    policy = <<EOF
+{
+  "Version" : "2012-10-17",
+  "Id" : "MacieKMSAccess",
+  "Statement" : [ {
+    "Sid" : "AllowRootAccountAccess",
+    "Effect" : "Allow",
+    "Principal" : {
+      "AWS" : "arn:aws:iam::226347592148:root"
+    },
+    "Action" : "kms:*",
+    "Resource" : "*"
+  }, {
+    "Sid" : "AllowMacieToUseTheKey",
+    "Effect" : "Allow",
+    "Principal" : {
+      "Service" : "macie.amazonaws.com"
+    },
+    "Action" : [ "kms:GenerateDataKey", "kms:Encrypt" ],
+    "Resource" : "*",
+    "Condition" : {
+      "StringEquals" : {
+        "aws:SourceAccount" : "226347592148"
+      },
+      "ArnLike" : {
+        "aws:SourceArn" : [ "arn:aws:macie2:ap-northeast-2:226347592148:export-configuration:*", "arn:aws:macie2:ap-northeast-2:226347592148:classification-job/*" ]
+      }
+    }
+  } ]
+}
+EOF
+}
+
+resource "aws_kms_key" "KMSKey3" {
+    is_enabled = false
+    description = ""
+    key_usage = "ENCRYPT_DECRYPT"
+    policy = <<EOF
+{
+  "Version" : "2012-10-17",
+  "Id" : "MacieKMSAccess",
+  "Statement" : [ {
+    "Sid" : "AllowRootAccountAccess",
+    "Effect" : "Allow",
+    "Principal" : {
+      "AWS" : "arn:aws:iam::226347592148:root"
+    },
+    "Action" : "kms:*",
+    "Resource" : "*"
+  }, {
+    "Sid" : "AllowMacieToUseTheKey",
+    "Effect" : "Allow",
+    "Principal" : {
+      "Service" : "macie.amazonaws.com"
+    },
+    "Action" : [ "kms:GenerateDataKey", "kms:Encrypt" ],
+    "Resource" : "*",
+    "Condition" : {
+      "StringEquals" : {
+        "aws:SourceAccount" : "226347592148"
+      },
+      "ArnLike" : {
+        "aws:SourceArn" : [ "arn:aws:macie2:ap-northeast-2:226347592148:export-configuration:*", "arn:aws:macie2:ap-northeast-2:226347592148:classification-job/*" ]
+      }
+    }
+  } ]
+}
+EOF
 }
 
 resource "aws_vpc" "EC2VPC" {
@@ -243,55 +626,55 @@ resource "aws_vpc" "EC2VPC" {
     enable_dns_hostnames = true
     instance_tenancy = "default"
     tags = {
-        Name = "riot-games-vpc"
+        Name = "day3-vpc"
     }
 }
 
 resource "aws_subnet" "EC2Subnet" {
-    availability_zone = "us-east-1a"
-    cidr_block = "10.0.160.0/20"
-    vpc_id = "${aws_vpc.EC2VPC.id}"
-    map_public_ip_on_launch = false
-}
-
-resource "aws_subnet" "EC2Subnet2" {
-    availability_zone = "us-east-1a"
+    availability_zone = "ap-northeast-2a"
     cidr_block = "10.0.0.0/20"
     vpc_id = "${aws_vpc.EC2VPC.id}"
     map_public_ip_on_launch = false
 }
 
+resource "aws_subnet" "EC2Subnet2" {
+    availability_zone = "ap-northeast-2c"
+    cidr_block = "10.0.32.0/20"
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    map_public_ip_on_launch = false
+}
+
 resource "aws_subnet" "EC2Subnet3" {
-    availability_zone = "us-east-1a"
+    availability_zone = "ap-northeast-2a"
     cidr_block = "10.0.128.0/20"
     vpc_id = "${aws_vpc.EC2VPC.id}"
     map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "EC2Subnet4" {
-    availability_zone = "us-east-1b"
-    cidr_block = "10.0.176.0/20"
+    availability_zone = "ap-northeast-2b"
+    cidr_block = "10.0.16.0/20"
     vpc_id = "${aws_vpc.EC2VPC.id}"
     map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "EC2Subnet5" {
-    availability_zone = "us-east-1b"
+    availability_zone = "ap-northeast-2b"
     cidr_block = "10.0.144.0/20"
     vpc_id = "${aws_vpc.EC2VPC.id}"
     map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "EC2Subnet6" {
-    availability_zone = "us-east-1b"
-    cidr_block = "10.0.16.0/20"
+    availability_zone = "ap-northeast-2c"
+    cidr_block = "10.0.160.0/20"
     vpc_id = "${aws_vpc.EC2VPC.id}"
     map_public_ip_on_launch = false
 }
 
 resource "aws_internet_gateway" "EC2InternetGateway" {
     tags = {
-        Name = "riot-games-igw"
+        Name = "day3-igw"
     }
     vpc_id = "${aws_vpc.EC2VPC.id}"
 }
@@ -301,9 +684,9 @@ resource "aws_eip" "EC2EIP" {
 }
 
 resource "aws_eip_association" "EC2EIPAssociation" {
-    allocation_id = "eipalloc-01cafddd444bc6ca9"
-    network_interface_id = "eni-07d72e0b710b25c89"
-    private_ip_address = "10.0.1.222"
+    allocation_id = "eipalloc-0aef350fa2f172046"
+    network_interface_id = "eni-01097c127e9511bcf"
+    private_ip_address = "10.0.3.204"
 }
 
 resource "aws_eip" "EC2EIP2" {
@@ -311,94 +694,116 @@ resource "aws_eip" "EC2EIP2" {
 }
 
 resource "aws_eip_association" "EC2EIPAssociation2" {
-    allocation_id = "eipalloc-00f573b4c15fac498"
-    network_interface_id = "eni-0c44691029d036055"
-    private_ip_address = "10.0.29.24"
+    allocation_id = "eipalloc-0b504b1eb5d724bd5"
+    network_interface_id = "eni-02bdc20cbd992e159"
+    private_ip_address = "10.0.24.144"
+}
+
+resource "aws_eip" "EC2EIP3" {
+    vpc = true
+}
+
+resource "aws_eip_association" "EC2EIPAssociation3" {
+    allocation_id = "eipalloc-075e50b4bd083e5a6"
+    network_interface_id = "eni-01fc7de334b5ab4ae"
+    private_ip_address = "10.0.45.0"
+}
+
+resource "aws_vpc_dhcp_options" "EC2DHCPOptions" {
+    domain_name = "ap-northeast-2.compute.internal"
+    tags = {}
 }
 
 resource "aws_vpc_dhcp_options_association" "EC2VPCDHCPOptionsAssociation" {
-    dhcp_options_id = "dopt-04763b5d85185ae78"
+    dhcp_options_id = "dopt-07c12984356bd6cdb"
     vpc_id = "${aws_vpc.EC2VPC.id}"
 }
 
 resource "aws_route_table" "EC2RouteTable" {
     vpc_id = "${aws_vpc.EC2VPC.id}"
-    tags = {
-        Name = "riot-games-rtb-db2-us-east-1b"
-    }
+    tags = {}
 }
 
 resource "aws_route_table" "EC2RouteTable2" {
     vpc_id = "${aws_vpc.EC2VPC.id}"
     tags = {
-        Name = "riot-games-rtb-public"
+        Name = "day3-rtb-private1-ap-northeast-2a"
     }
 }
 
 resource "aws_route_table" "EC2RouteTable3" {
     vpc_id = "${aws_vpc.EC2VPC.id}"
     tags = {
-        Name = "riot-games-rtb-private2-us-east-1b"
+        Name = "day3-rtb-private2-ap-northeast-2b"
     }
 }
 
 resource "aws_route_table" "EC2RouteTable4" {
     vpc_id = "${aws_vpc.EC2VPC.id}"
     tags = {
-        Name = "riot-games-rtb-db1-us-east-1a"
+        Name = "day3-rtb-public"
     }
 }
 
 resource "aws_route_table" "EC2RouteTable5" {
     vpc_id = "${aws_vpc.EC2VPC.id}"
-    tags = {}
-}
-
-resource "aws_route_table" "EC2RouteTable6" {
-    vpc_id = "${aws_vpc.EC2VPC.id}"
     tags = {
-        Name = "riot-games-rtb-private1-us-east-1a"
+        Name = "day3-rtb-private3-ap-northeast-2c"
     }
 }
 
 resource "aws_route" "EC2Route" {
     destination_cidr_block = "0.0.0.0/0"
-    gateway_id = "igw-03269d466c7bb5d02"
-    route_table_id = "rtb-0220a6511631ea821"
+    nat_gateway_id = "nat-032f65150a0564cae"
+    route_table_id = "rtb-0f501161dc6b7ef8a"
 }
 
 resource "aws_route" "EC2Route2" {
     destination_cidr_block = "0.0.0.0/0"
-    nat_gateway_id = "nat-06c5bc9e5a8d58cb9"
-    route_table_id = "rtb-03b1c0beb15115e0b"
+    nat_gateway_id = "nat-045d0a99901b5f796"
+    route_table_id = "rtb-08733264166cc617e"
 }
 
 resource "aws_route" "EC2Route3" {
     destination_cidr_block = "0.0.0.0/0"
-    nat_gateway_id = "nat-07727eb0e8fe9a8e7"
-    route_table_id = "rtb-0f3e5145f72e42bd4"
+    gateway_id = "igw-0b33c26c419bd6be9"
+    route_table_id = "rtb-08e4da12c50b94ed9"
+}
+
+resource "aws_route" "EC2Route4" {
+    destination_cidr_block = "0.0.0.0/0"
+    nat_gateway_id = "nat-052e9daee6cc1b4df"
+    route_table_id = "rtb-0fcd571a0515089dc"
 }
 
 resource "aws_nat_gateway" "EC2NatGateway" {
-    subnet_id = "subnet-006bb80b596d12f19"
+    subnet_id = "subnet-058dd7f42efa52d29"
     tags = {
-        Name = "riot-games-nat-public1-us-east-1a"
+        Name = "day3-nat-public2-ap-northeast-2b"
     }
-    allocation_id = "eipalloc-01cafddd444bc6ca9"
+    allocation_id = "eipalloc-0b504b1eb5d724bd5"
 }
 
 resource "aws_nat_gateway" "EC2NatGateway2" {
-    subnet_id = "subnet-0d656810a69673164"
+    subnet_id = "subnet-01c96e4762e568238"
     tags = {
-        Name = "riot-games-nat-public2-us-east-1b"
+        Name = "day3-nat-public1-ap-northeast-2a"
     }
-    allocation_id = "eipalloc-00f573b4c15fac498"
+    allocation_id = "eipalloc-0aef350fa2f172046"
+}
+
+resource "aws_nat_gateway" "EC2NatGateway3" {
+    subnet_id = "subnet-07f8030461b6aac64"
+    tags = {
+        Name = "day3-nat-public3-ap-northeast-2c"
+    }
+    allocation_id = "eipalloc-075e50b4bd083e5a6"
 }
 
 resource "aws_vpc_endpoint" "EC2VPCEndpoint" {
     vpc_endpoint_type = "Interface"
     vpc_id = "${aws_vpc.EC2VPC.id}"
-    service_name = "com.amazonaws.vpce.us-east-1.vpce-svc-00b536bd57d727867"
+    service_name = "com.amazonaws.elasticache.serverless.ap-northeast-2.vpce-svc-0644bc816be44df2e"
     policy = <<EOF
 {
   "Statement": [
@@ -412,294 +817,485 @@ resource "aws_vpc_endpoint" "EC2VPCEndpoint" {
 }
 EOF
     subnet_ids = [
-        "subnet-08436219347ee30dd",
-        "subnet-00c0efcb0614db99c"
+        "subnet-05ed591a8b84b42c2",
+        "subnet-08144f18ea0fc04b2",
+        "subnet-07b66daa182167f3c"
     ]
     private_dns_enabled = false
     security_group_ids = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
+        "sg-0563657dad9896f5f"
+    ]
+}
+
+resource "aws_vpc_endpoint" "EC2VPCEndpoint2" {
+    vpc_endpoint_type = "Interface"
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    service_name = "com.amazonaws.elasticache.serverless.ap-northeast-2.vpce-svc-0d3212f4fda0fbfe7"
+    policy = <<EOF
+{
+  "Statement": [
+    {
+      "Action": "*", 
+      "Effect": "Allow", 
+      "Principal": "*", 
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+    subnet_ids = [
+        "subnet-05ed591a8b84b42c2",
+        "subnet-08144f18ea0fc04b2",
+        "subnet-07b66daa182167f3c"
+    ]
+    private_dns_enabled = false
+    security_group_ids = [
+        "sg-0563657dad9896f5f"
+    ]
+}
+
+resource "aws_vpc_endpoint" "EC2VPCEndpoint3" {
+    vpc_endpoint_type = "Interface"
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    service_name = "com.amazonaws.elasticache.serverless.ap-northeast-2.vpce-svc-0f9c7798e2dc91ede"
+    policy = <<EOF
+{
+  "Statement": [
+    {
+      "Action": "*", 
+      "Effect": "Allow", 
+      "Principal": "*", 
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+    subnet_ids = [
+        "subnet-05ed591a8b84b42c2",
+        "subnet-08144f18ea0fc04b2",
+        "subnet-07b66daa182167f3c"
+    ]
+    private_dns_enabled = false
+    security_group_ids = [
+        "sg-0563657dad9896f5f"
     ]
 }
 
 resource "aws_route_table_association" "EC2SubnetRouteTableAssociation" {
-    route_table_id = "rtb-0ecc35fe32177338d"
-    subnet_id = "subnet-00c0efcb0614db99c"
+    route_table_id = "rtb-0f501161dc6b7ef8a"
+    subnet_id = "subnet-05ed591a8b84b42c2"
 }
 
 resource "aws_route_table_association" "EC2SubnetRouteTableAssociation2" {
-    route_table_id = "rtb-0220a6511631ea821"
-    subnet_id = "subnet-0d656810a69673164"
+    route_table_id = "rtb-08733264166cc617e"
+    subnet_id = "subnet-08144f18ea0fc04b2"
 }
 
 resource "aws_route_table_association" "EC2SubnetRouteTableAssociation3" {
-    route_table_id = "rtb-0220a6511631ea821"
-    subnet_id = "subnet-006bb80b596d12f19"
+    route_table_id = "rtb-08e4da12c50b94ed9"
+    subnet_id = "subnet-07f8030461b6aac64"
 }
 
 resource "aws_route_table_association" "EC2SubnetRouteTableAssociation4" {
-    route_table_id = "rtb-03b1c0beb15115e0b"
-    subnet_id = "subnet-01a6cf3e86c0e6af2"
+    route_table_id = "rtb-08e4da12c50b94ed9"
+    subnet_id = "subnet-01c96e4762e568238"
 }
 
 resource "aws_route_table_association" "EC2SubnetRouteTableAssociation5" {
-    route_table_id = "rtb-0acf1b601b8ef30e9"
-    subnet_id = "subnet-08436219347ee30dd"
+    route_table_id = "rtb-08e4da12c50b94ed9"
+    subnet_id = "subnet-058dd7f42efa52d29"
 }
 
 resource "aws_route_table_association" "EC2SubnetRouteTableAssociation6" {
-    route_table_id = "rtb-0f3e5145f72e42bd4"
-    subnet_id = "subnet-0ed83f8d0a5aee854"
+    route_table_id = "rtb-0fcd571a0515089dc"
+    subnet_id = "subnet-07b66daa182167f3c"
 }
 
 resource "aws_route53_zone" "Route53HostedZone" {
-    name = "gongju.click."
+    name = "itnsa.cloud."
 }
 
 resource "aws_route53_zone" "Route53HostedZone2" {
-    name = "images."
+    name = "worldskills.cloud."
 }
 
 resource "aws_route53_zone" "Route53HostedZone3" {
-    name = "players."
-}
-
-resource "aws_route53_zone" "Route53HostedZone4" {
-    name = "champions."
-}
-
-resource "aws_route53_zone" "Route53HostedZone5" {
-    name = "matches."
+    name = "awssoft.org."
 }
 
 resource "aws_route53_record" "Route53RecordSet" {
-    name = "gongju.click."
+    name = "itnsa.cloud."
     type = "NS"
     ttl = 172800
     records = [
-        "ns-506.awsdns-63.com.",
-        "ns-1553.awsdns-02.co.uk.",
-        "ns-1347.awsdns-40.org.",
-        "ns-763.awsdns-31.net."
+        "ns-301.awsdns-37.com.",
+        "ns-754.awsdns-30.net.",
+        "ns-1944.awsdns-51.co.uk.",
+        "ns-1442.awsdns-52.org."
     ]
-    zone_id = "Z03492761PQ0V20I39M40"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet2" {
-    name = "gongju.click."
+    name = "itnsa.cloud."
     type = "SOA"
     ttl = 900
     records = [
-        "ns-506.awsdns-63.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+        "ns-301.awsdns-37.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
     ]
-    zone_id = "Z03492761PQ0V20I39M40"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet3" {
-    name = "images."
-    type = "NS"
-    ttl = 172800
+    name = "itnsa.cloud."
+    type = "TXT"
+    ttl = 300
     records = [
-        "ns-1536.awsdns-00.co.uk.",
-        "ns-0.awsdns-00.com.",
-        "ns-1024.awsdns-00.org.",
-        "ns-512.awsdns-00.net."
+        "\"v=spf1 include:amazonses.com ~all\""
     ]
-    zone_id = "Z0288463215C9AG06222I"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet4" {
-    name = "images."
-    type = "SOA"
-    ttl = 15
+    name = "_706e74212a0e6e60b7208ce14aa44752.itnsa.cloud."
+    type = "CNAME"
+    ttl = 300
     records = [
-        "ns-1536.awsdns-00.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+        "_e5d8728699a53e2f99d7436ff3794ccc.lkwmzfhcjn.acm-validations.aws."
     ]
-    zone_id = "Z0288463215C9AG06222I"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet5" {
-    name = "images.images."
-    type = "A"
-    set_identifier = "0aac7e7b6e1b44bea5ca3c72c099f2de"
-    multivalue_answer_routing_policy = true
-    ttl = 15
-    health_check_id = "3003e044-9e03-4e77-b533-db67680f6b8b"
+    name = "_amazonses.itnsa.cloud."
+    type = "TXT"
+    ttl = 300
     records = [
-        "10.0.134.242"
+        "\"y4CeT2Vm2v2M90CSha8ePMwX89ZTIkckbAh7FnZGEL8=\""
     ]
-    zone_id = "Z0288463215C9AG06222I"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet6" {
-    name = "images.images."
-    type = "A"
-    set_identifier = "2b8278b870534b0c8a86f1c26f07a2c0"
-    multivalue_answer_routing_policy = true
-    ttl = 15
-    health_check_id = "08c39152-f661-4abd-bfc8-47b55d736581"
+    name = "_dmarc.itnsa.cloud."
+    type = "TXT"
+    ttl = 300
     records = [
-        "10.0.151.23"
+        "\"v=DMARC1;p=quarantine;pct=100;fo=1\""
     ]
-    zone_id = "Z0288463215C9AG06222I"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet7" {
-    name = "players."
-    type = "NS"
-    ttl = 172800
+    name = "23atb4hkjrty36u72d4aen7kxd74ti5d._domainkey.itnsa.cloud."
+    type = "CNAME"
+    ttl = 300
     records = [
-        "ns-1536.awsdns-00.co.uk.",
-        "ns-0.awsdns-00.com.",
-        "ns-1024.awsdns-00.org.",
-        "ns-512.awsdns-00.net."
+        "23atb4hkjrty36u72d4aen7kxd74ti5d.dkim.amazonses.com."
     ]
-    zone_id = "Z0451605YAOBGYXK9P2N"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet8" {
-    name = "players."
-    type = "SOA"
-    ttl = 15
+    name = "6rwn5xcrcsgzy4qnvkwsye2szfku2xrk._domainkey.itnsa.cloud."
+    type = "CNAME"
+    ttl = 300
     records = [
-        "ns-1536.awsdns-00.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+        "6rwn5xcrcsgzy4qnvkwsye2szfku2xrk.dkim.amazonses.com."
     ]
-    zone_id = "Z0451605YAOBGYXK9P2N"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet9" {
-    name = "players.players."
-    type = "A"
-    set_identifier = "867a28fba3d547e18dd9f0a8e379c658"
-    multivalue_answer_routing_policy = true
-    ttl = 15
-    health_check_id = "e2b45943-ba1a-4fcb-9dac-799aa54dec8b"
+    name = "n2cplo3stim3unrpcu6mirbgocx5uynp._domainkey.itnsa.cloud."
+    type = "CNAME"
+    ttl = 300
     records = [
-        "10.0.128.184"
+        "n2cplo3stim3unrpcu6mirbgocx5uynp.dkim.amazonses.com."
     ]
-    zone_id = "Z0451605YAOBGYXK9P2N"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet10" {
-    name = "players.players."
-    type = "A"
-    set_identifier = "99f9e1467127491397776b127f3697cf"
-    multivalue_answer_routing_policy = true
-    ttl = 15
-    health_check_id = "1482d373-390f-4f74-9ec8-1bca320027e1"
+    name = "api.itnsa.cloud."
+    type = "CNAME"
+    ttl = 0
     records = [
-        "10.0.150.161"
+        "edge.itnsa.cloud."
     ]
-    zone_id = "Z0451605YAOBGYXK9P2N"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet11" {
-    name = "matches."
-    type = "NS"
-    ttl = 172800
+    name = "autodiscover.itnsa.cloud."
+    type = "CNAME"
+    ttl = 300
     records = [
-        "ns-1536.awsdns-00.co.uk.",
-        "ns-0.awsdns-00.com.",
-        "ns-1024.awsdns-00.org.",
-        "ns-512.awsdns-00.net."
+        "autodiscover.mail.us-east-1.awsapps.com."
     ]
-    zone_id = "Z04586151PTO379M6LWEN"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet12" {
-    name = "matches."
-    type = "SOA"
-    ttl = 15
-    records = [
-        "ns-1536.awsdns-00.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
-    ]
-    zone_id = "Z04586151PTO379M6LWEN"
+    name = "ctf.itnsa.cloud."
+    type = "A"
+    alias {
+        name = "edge.itnsa.cloud."
+        zone_id = "Z051584029F9RVFYF4VDP"
+        evaluate_target_health = true
+    }
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet13" {
-    name = "matches.matches."
+    name = "edge.itnsa.cloud."
     type = "A"
-    set_identifier = "37408ed676844544b15b5e52d1780d5f"
-    multivalue_answer_routing_policy = true
-    ttl = 15
-    health_check_id = "f0e2338a-1886-429f-b055-c2629d93472f"
+    ttl = 300
     records = [
-        "10.0.154.255"
+        "116.41.254.160"
     ]
-    zone_id = "Z04586151PTO379M6LWEN"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet14" {
-    name = "matches.matches."
-    type = "A"
-    set_identifier = "5f802d1ed50b44969d1ac62843f8d8f3"
-    multivalue_answer_routing_policy = true
-    ttl = 15
-    health_check_id = "95493ab7-dd26-448d-8d2a-aed6eb022d08"
+    name = "ie-skills.itnsa.cloud."
+    type = "CNAME"
+    ttl = 0
     records = [
-        "10.0.139.12"
+        "edge.itnsa.cloud."
     ]
-    zone_id = "Z04586151PTO379M6LWEN"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet15" {
-    name = "champions."
-    type = "NS"
-    ttl = 172800
+    name = "iso.itnsa.cloud."
+    type = "CNAME"
+    ttl = 300
     records = [
-        "ns-1536.awsdns-00.co.uk.",
-        "ns-0.awsdns-00.com.",
-        "ns-1024.awsdns-00.org.",
-        "ns-512.awsdns-00.net."
+        "edge.itnsa.cloud."
     ]
-    zone_id = "Z045144228BE86TRUOGZB"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet16" {
-    name = "champions."
-    type = "SOA"
-    ttl = 15
+    name = "_068a1c8f5e8e642f5708488657e79239.meal.itnsa.cloud."
+    type = "CNAME"
+    ttl = 300
     records = [
-        "ns-1536.awsdns-00.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+        "_3093ce0899928012b343f034c08e615c.wsqgzrdths.acm-validations.aws."
     ]
-    zone_id = "Z045144228BE86TRUOGZB"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet17" {
-    name = "champions.champions."
-    type = "A"
-    set_identifier = "321db7a755db412093758505db4f98bd"
-    multivalue_answer_routing_policy = true
-    ttl = 15
-    health_check_id = "78734ca2-13a1-4740-b955-2f97f709ad98"
+    name = "nas.itnsa.cloud."
+    type = "CNAME"
+    ttl = 0
     records = [
-        "10.0.156.194"
+        "edge.itnsa.cloud."
     ]
-    zone_id = "Z045144228BE86TRUOGZB"
+    zone_id = "Z051584029F9RVFYF4VDP"
 }
 
 resource "aws_route53_record" "Route53RecordSet18" {
-    name = "champions.champions."
-    type = "A"
-    set_identifier = "71a90f30f7e441799efcc0310d23ab4e"
-    multivalue_answer_routing_policy = true
-    ttl = 15
-    health_check_id = "99258755-6271-4940-9bf4-7ddf64a727a1"
+    name = "rds.itnsa.cloud."
+    type = "CNAME"
+    ttl = 60
     records = [
-        "10.0.128.130"
+        "edge.itnsa.cloud."
     ]
-    zone_id = "Z045144228BE86TRUOGZB"
+    zone_id = "Z051584029F9RVFYF4VDP"
+}
+
+resource "aws_route53_record" "Route53RecordSet19" {
+    name = "ssh.itnsa.cloud."
+    type = "A"
+    alias {
+        name = "edge.itnsa.cloud."
+        zone_id = "Z051584029F9RVFYF4VDP"
+        evaluate_target_health = true
+    }
+    zone_id = "Z051584029F9RVFYF4VDP"
+}
+
+resource "aws_route53_record" "Route53RecordSet20" {
+    name = "vpn.itnsa.cloud."
+    type = "CNAME"
+    ttl = 300
+    records = [
+        "edge.itnsa.cloud."
+    ]
+    zone_id = "Z051584029F9RVFYF4VDP"
+}
+
+resource "aws_route53_record" "Route53RecordSet21" {
+    name = "worldskills.cloud."
+    type = "NS"
+    ttl = 172800
+    records = [
+        "ns-865.awsdns-44.net.",
+        "ns-1873.awsdns-42.co.uk.",
+        "ns-1103.awsdns-09.org.",
+        "ns-458.awsdns-57.com."
+    ]
+    zone_id = "Z06376413LHBJ8LCHVBE9"
+}
+
+resource "aws_route53_record" "Route53RecordSet22" {
+    name = "worldskills.cloud."
+    type = "SOA"
+    ttl = 900
+    records = [
+        "ns-865.awsdns-44.net. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+    ]
+    zone_id = "Z06376413LHBJ8LCHVBE9"
+}
+
+resource "aws_route53_record" "Route53RecordSet23" {
+    name = "_0b3d690d0cea5a8305af42f50a8ba303.worldskills.cloud."
+    type = "CNAME"
+    ttl = 300
+    records = [
+        "_6b7940b35d22ef7fbd4e226e2118adb5.vjldqjsdcd.acm-validations.aws."
+    ]
+    zone_id = "Z06376413LHBJ8LCHVBE9"
+}
+
+resource "aws_route53_record" "Route53RecordSet24" {
+    name = "_2f7c09095736094796e5e2e02ebd354e.api.worldskills.cloud."
+    type = "CNAME"
+    ttl = 300
+    records = [
+        "_4b2d27875bfd3f40f901f1e48bcf56c5.wsqgzrdths.acm-validations.aws."
+    ]
+    zone_id = "Z06376413LHBJ8LCHVBE9"
+}
+
+resource "aws_route53_record" "Route53RecordSet25" {
+    name = "ie.worldskills.cloud."
+    type = "A"
+    ttl = 300
+    records = [
+        "116.41.254.160"
+    ]
+    zone_id = "Z06376413LHBJ8LCHVBE9"
+}
+
+resource "aws_route53_record" "Route53RecordSet26" {
+    name = "mecha.worldskills.cloud."
+    type = "A"
+    ttl = 300
+    records = [
+        "116.41.254.160"
+    ]
+    zone_id = "Z06376413LHBJ8LCHVBE9"
+}
+
+resource "aws_route53_record" "Route53RecordSet27" {
+    name = "awssoft.org."
+    type = "NS"
+    ttl = 172800
+    records = [
+        "ns-782.awsdns-33.net.",
+        "ns-141.awsdns-17.com.",
+        "ns-1169.awsdns-18.org.",
+        "ns-1537.awsdns-00.co.uk."
+    ]
+    zone_id = "Z0988100UJ74I2LZWGV1"
+}
+
+resource "aws_route53_record" "Route53RecordSet28" {
+    name = "awssoft.org."
+    type = "SOA"
+    ttl = 900
+    records = [
+        "ns-782.awsdns-33.net. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+    ]
+    zone_id = "Z0988100UJ74I2LZWGV1"
+}
+
+resource "aws_route53_record" "Route53RecordSet29" {
+    name = "www.awssoft.org."
+    type = "CNAME"
+    ttl = 300
+    records = [
+        "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+    ]
+    zone_id = "Z0988100UJ74I2LZWGV1"
 }
 
 resource "aws_instance" "EC2Instance" {
-    ami = "ami-0453ec754f44f9a4a"
-    instance_type = "t3.medium"
-    key_name = "bastion"
-    availability_zone = "us-east-1a"
+    ami = "ami-05f11164c598ea079"
+    instance_type = "t3.large"
+    availability_zone = "ap-northeast-2c"
     tenancy = "default"
-    subnet_id = "subnet-006bb80b596d12f19"
+    subnet_id = "subnet-07b66daa182167f3c"
+    ebs_optimized = false
+    vpc_security_group_ids = [
+        "${aws_security_group.EC2SecurityGroup7.id}",
+        "${aws_security_group.EC2SecurityGroup7.id}"
+    ]
+    source_dest_check = true
+    root_block_device {
+        volume_size = 80
+        volume_type = "gp3"
+        delete_on_termination = true
+    }
+    user_data = "TUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSIvLyIKCi0tLy8KQ29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9ub2RlLmVrcy5hd3MKCi0tLQphcGlWZXJzaW9uOiBub2RlLmVrcy5hd3MvdjFhbHBoYTEKa2luZDogTm9kZUNvbmZpZwpzcGVjOgogIGNsdXN0ZXI6CiAgICBhcGlTZXJ2ZXJFbmRwb2ludDogaHR0cHM6Ly80Nzc3OTMyMkVFMjJGNjk0RkE1MEE3OTVDQ0M5ODU5RS55bDQuYXAtbm9ydGhlYXN0LTIuZWtzLmFtYXpvbmF3cy5jb20KICAgIGNlcnRpZmljYXRlQXV0aG9yaXR5OiBMUzB0TFMxQ1JVZEpUaUJEUlZKVVNVWkpRMEZVUlMwdExTMHRDazFKU1VSQ1ZFTkRRV1V5WjBGM1NVSkJaMGxKVEdoVVNTOTNZMVUwVEhkM1JGRlpTa3R2V2tsb2RtTk9RVkZGVEVKUlFYZEdWRVZVVFVKRlIwRXhWVVVLUVhoTlMyRXpWbWxhV0VwMVdsaFNiR042UVdWR2R6QjVUbFJCZUUxcVZYZE9WRTAwVFZSa1lVWjNNSHBPVkVGNFRXcE5kMDVVVVhwTlZHUmhUVUpWZUFwRmVrRlNRbWRPVmtKQlRWUkRiWFF4V1cxV2VXSnRWakJhV0UxM1oyZEZhVTFCTUVkRFUzRkhVMGxpTTBSUlJVSkJVVlZCUVRSSlFrUjNRWGRuWjBWTENrRnZTVUpCVVVSRlZYSlpkQzh2Y1ZSM1MzVkxSbFZLZVRCalV5dHRkRzVJYjJSS2VIVk9kVlI1VVZwaFpIWk5lRE5PT0VjcldrSjNPVlZNYldndmFHUUtUbVIxZUZSeWFFUnZhRlJUTDBsNmVIZzFORlJvWW5abllXOUdNR2xPWXpFelRXdEhUbk12WlZsbWNFMHZUMHhtYTB4SGJuQlRORVJrWWxGWlZqQlNXUW8zU1hndkswTjZZVzVrZVhsdVZHRnRZMk5xWldSM1pFbDJUbFZzV1VwVU1VeG9WM2xNY1dvM1FUbHBWWHB6SzNWSlQxTlBUM05JZGpKM0wzUlhRbkZKQ25CblNqTXlRamRPUml0RFZUTTRVekV2YmpodFUxUlZUVU5FYVhjMFYyWkdWMGRTT0hSYWIxRjZRVlV6VUdOeVZYTTJObkJyU1VWU1NrOTZWbTlGZG5rS1VrdE9NRGwzY2pGaGNGaGFTRXBXTVVSbVFqVk5ka0ZRTDNkbmJXMHZMM0I1TlRWcVZuRTROemhWUVhoMFRXZE9NSEpaTkhaM2RXSXlZVk16VEVzeWFRcDZhSFZqYUdNeUt5dFpPRkV5WkVGRVJWRjJaV052WTJGb2JuTkVRV2ROUWtGQlIycFhWRUpZVFVFMFIwRXhWV1JFZDBWQ0wzZFJSVUYzU1VOd1JFRlFDa0puVGxaSVVrMUNRV1k0UlVKVVFVUkJVVWd2VFVJd1IwRXhWV1JFWjFGWFFrSlJaVlZhWTJSRlRHY3dSMnh6WkZGeWRVeE9TbFpNUVZkV0syRkVRVllLUW1kT1ZraFNSVVZFYWtGTloyZHdjbVJYU214amJUVnNaRWRXZWsxQk1FZERVM0ZIVTBsaU0wUlJSVUpEZDFWQlFUUkpRa0ZSUTNoUlZEWlpiVEJKWlFwbWVrRm5ZekZ4TW1KdWJuVmxZbGM1UjBNMFpqRktlbGh5UlV4dU9GbHdRbTVvVXl0SVIxQlJiR2hJU0RRdmRHVnNNVmc0Y0ZNM1FreHZjV0l6TjJreUNqQk9ZbXBTWVVWTFowaEZOV3RMU21KdFpUbEZPVmxVWm5aMFRIZzNVMDlqTVZwM2MwZENWVlpFVFRKNlpFSktZVVoyT0cxQ1VUSmpaR1ZOVVVsM2NXNEtNMDV4TUc1Uk1YQkRaVWx0Y1RGVEwyTnhXVlZIVVhWcWNVdFRjbkZDTmxFNUx6UkNUazVwVUU1SGVXaHViV3RRVkdORGNHaE1aSE4zYjJaNE1YbDNSQXBIVFdSSFEycFpObWxDYm1KMkwzaE9URFZOZVRKdVNIWlFRMmhwVm10VlVtNUROV0l5UVhrNVRGUk9iMnh2UkdkTFF6Qk1PRTluUnpKQ1oxRXljWHB5Q2xVeU5HSjNiamxqZERSd2MwbzNkVVYxWlN0NldWaHVWVU42VUZSaWRqVXZOWFpLZW1OUFNsb3pUbmh3TW1abWNuRmtPVWRGUzFSd2VVczNhV05TUjFrS2QyYzRWMWQwZGpSV2RVZGhDaTB0TFMwdFJVNUVJRU5GVWxSSlJrbERRVlJGTFMwdExTMEsKICAgIGNpZHI6IDE3Mi4yMC4wLjAvMTYKICAgIG5hbWU6IGRheTMtY2x1c3RlcgogIGt1YmVsZXQ6CiAgICBjb25maWc6CiAgICAgIG1heFBvZHM6IDM1CiAgICAgIGNsdXN0ZXJETlM6CiAgICAgIC0gMTcyLjIwLjAuMTAKICAgIGZsYWdzOgogICAgLSAiLS1ub2RlLWxhYmVscz1la3MuYW1hem9uYXdzLmNvbS9zb3VyY2VMYXVuY2hUZW1wbGF0ZVZlcnNpb249MSxhbHBoYS5la3NjdGwuaW8vY2x1c3Rlci1uYW1lPWRheTMtY2x1c3RlcixhbHBoYS5la3NjdGwuaW8vbm9kZWdyb3VwLW5hbWU9ZGF5My1hcHAtbmcscm9sZT1hcHBzLGVrcy5hbWF6b25hd3MuY29tL25vZGVncm91cC1pbWFnZT1hbWktMDVmMTExNjRjNTk4ZWEwNzksZWtzLmFtYXpvbmF3cy5jb20vY2FwYWNpdHlUeXBlPU9OX0RFTUFORCxla3MuYW1hem9uYXdzLmNvbS9ub2RlZ3JvdXA9ZGF5My1hcHAtbmcsZWtzLmFtYXpvbmF3cy5jb20vc291cmNlTGF1bmNoVGVtcGxhdGVJZD1sdC0wYjBiYjc1YjYzMmM5ZTZlNSIKCi0tLy8tLQ=="
+    iam_instance_profile = "eks-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+    tags = {
+        Name = "day3-app-ng"
+        alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+        eks:cluster-name = "day3-cluster"
+        k8s.io/cluster-autoscaler/day3-cluster = "owned"
+        kubernetes.io/cluster/day3-cluster = "owned"
+        eks:nodegroup-name = "day3-app-ng"
+        alpha.eksctl.io/nodegroup-type = "managed"
+        k8s.io/cluster-autoscaler/enabled = "true"
+    }
+}
+
+resource "aws_instance" "EC2Instance2" {
+    ami = "ami-05f11164c598ea079"
+    instance_type = "t3.large"
+    availability_zone = "ap-northeast-2a"
+    tenancy = "default"
+    subnet_id = "subnet-05ed591a8b84b42c2"
+    ebs_optimized = false
+    vpc_security_group_ids = [
+        "${aws_security_group.EC2SecurityGroup7.id}",
+        "${aws_security_group.EC2SecurityGroup7.id}"
+    ]
+    source_dest_check = true
+    root_block_device {
+        volume_size = 80
+        volume_type = "gp3"
+        delete_on_termination = true
+    }
+    user_data = "TUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSIvLyIKCi0tLy8KQ29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9ub2RlLmVrcy5hd3MKCi0tLQphcGlWZXJzaW9uOiBub2RlLmVrcy5hd3MvdjFhbHBoYTEKa2luZDogTm9kZUNvbmZpZwpzcGVjOgogIGNsdXN0ZXI6CiAgICBhcGlTZXJ2ZXJFbmRwb2ludDogaHR0cHM6Ly80Nzc3OTMyMkVFMjJGNjk0RkE1MEE3OTVDQ0M5ODU5RS55bDQuYXAtbm9ydGhlYXN0LTIuZWtzLmFtYXpvbmF3cy5jb20KICAgIGNlcnRpZmljYXRlQXV0aG9yaXR5OiBMUzB0TFMxQ1JVZEpUaUJEUlZKVVNVWkpRMEZVUlMwdExTMHRDazFKU1VSQ1ZFTkRRV1V5WjBGM1NVSkJaMGxKVEdoVVNTOTNZMVUwVEhkM1JGRlpTa3R2V2tsb2RtTk9RVkZGVEVKUlFYZEdWRVZVVFVKRlIwRXhWVVVLUVhoTlMyRXpWbWxhV0VwMVdsaFNiR042UVdWR2R6QjVUbFJCZUUxcVZYZE9WRTAwVFZSa1lVWjNNSHBPVkVGNFRXcE5kMDVVVVhwTlZHUmhUVUpWZUFwRmVrRlNRbWRPVmtKQlRWUkRiWFF4V1cxV2VXSnRWakJhV0UxM1oyZEZhVTFCTUVkRFUzRkhVMGxpTTBSUlJVSkJVVlZCUVRSSlFrUjNRWGRuWjBWTENrRnZTVUpCVVVSRlZYSlpkQzh2Y1ZSM1MzVkxSbFZLZVRCalV5dHRkRzVJYjJSS2VIVk9kVlI1VVZwaFpIWk5lRE5PT0VjcldrSjNPVlZNYldndmFHUUtUbVIxZUZSeWFFUnZhRlJUTDBsNmVIZzFORlJvWW5abllXOUdNR2xPWXpFelRXdEhUbk12WlZsbWNFMHZUMHhtYTB4SGJuQlRORVJrWWxGWlZqQlNXUW8zU1hndkswTjZZVzVrZVhsdVZHRnRZMk5xWldSM1pFbDJUbFZzV1VwVU1VeG9WM2xNY1dvM1FUbHBWWHB6SzNWSlQxTlBUM05JZGpKM0wzUlhRbkZKQ25CblNqTXlRamRPUml0RFZUTTRVekV2YmpodFUxUlZUVU5FYVhjMFYyWkdWMGRTT0hSYWIxRjZRVlV6VUdOeVZYTTJObkJyU1VWU1NrOTZWbTlGZG5rS1VrdE9NRGwzY2pGaGNGaGFTRXBXTVVSbVFqVk5ka0ZRTDNkbmJXMHZMM0I1TlRWcVZuRTROemhWUVhoMFRXZE9NSEpaTkhaM2RXSXlZVk16VEVzeWFRcDZhSFZqYUdNeUt5dFpPRkV5WkVGRVJWRjJaV052WTJGb2JuTkVRV2ROUWtGQlIycFhWRUpZVFVFMFIwRXhWV1JFZDBWQ0wzZFJSVUYzU1VOd1JFRlFDa0puVGxaSVVrMUNRV1k0UlVKVVFVUkJVVWd2VFVJd1IwRXhWV1JFWjFGWFFrSlJaVlZhWTJSRlRHY3dSMnh6WkZGeWRVeE9TbFpNUVZkV0syRkVRVllLUW1kT1ZraFNSVVZFYWtGTloyZHdjbVJYU214amJUVnNaRWRXZWsxQk1FZERVM0ZIVTBsaU0wUlJSVUpEZDFWQlFUUkpRa0ZSUTNoUlZEWlpiVEJKWlFwbWVrRm5ZekZ4TW1KdWJuVmxZbGM1UjBNMFpqRktlbGh5UlV4dU9GbHdRbTVvVXl0SVIxQlJiR2hJU0RRdmRHVnNNVmc0Y0ZNM1FreHZjV0l6TjJreUNqQk9ZbXBTWVVWTFowaEZOV3RMU21KdFpUbEZPVmxVWm5aMFRIZzNVMDlqTVZwM2MwZENWVlpFVFRKNlpFSktZVVoyT0cxQ1VUSmpaR1ZOVVVsM2NXNEtNMDV4TUc1Uk1YQkRaVWx0Y1RGVEwyTnhXVlZIVVhWcWNVdFRjbkZDTmxFNUx6UkNUazVwVUU1SGVXaHViV3RRVkdORGNHaE1aSE4zYjJaNE1YbDNSQXBIVFdSSFEycFpObWxDYm1KMkwzaE9URFZOZVRKdVNIWlFRMmhwVm10VlVtNUROV0l5UVhrNVRGUk9iMnh2UkdkTFF6Qk1PRTluUnpKQ1oxRXljWHB5Q2xVeU5HSjNiamxqZERSd2MwbzNkVVYxWlN0NldWaHVWVU42VUZSaWRqVXZOWFpLZW1OUFNsb3pUbmh3TW1abWNuRmtPVWRGUzFSd2VVczNhV05TUjFrS2QyYzRWMWQwZGpSV2RVZGhDaTB0TFMwdFJVNUVJRU5GVWxSSlJrbERRVlJGTFMwdExTMEsKICAgIGNpZHI6IDE3Mi4yMC4wLjAvMTYKICAgIG5hbWU6IGRheTMtY2x1c3RlcgogIGt1YmVsZXQ6CiAgICBjb25maWc6CiAgICAgIG1heFBvZHM6IDM1CiAgICAgIGNsdXN0ZXJETlM6CiAgICAgIC0gMTcyLjIwLjAuMTAKICAgIGZsYWdzOgogICAgLSAiLS1ub2RlLWxhYmVscz1la3MuYW1hem9uYXdzLmNvbS9zb3VyY2VMYXVuY2hUZW1wbGF0ZVZlcnNpb249MSxhbHBoYS5la3NjdGwuaW8vY2x1c3Rlci1uYW1lPWRheTMtY2x1c3RlcixhbHBoYS5la3NjdGwuaW8vbm9kZWdyb3VwLW5hbWU9ZGF5My1hcHAtbmcscm9sZT1hcHBzLGVrcy5hbWF6b25hd3MuY29tL25vZGVncm91cC1pbWFnZT1hbWktMDVmMTExNjRjNTk4ZWEwNzksZWtzLmFtYXpvbmF3cy5jb20vY2FwYWNpdHlUeXBlPU9OX0RFTUFORCxla3MuYW1hem9uYXdzLmNvbS9ub2RlZ3JvdXA9ZGF5My1hcHAtbmcsZWtzLmFtYXpvbmF3cy5jb20vc291cmNlTGF1bmNoVGVtcGxhdGVJZD1sdC0wYjBiYjc1YjYzMmM5ZTZlNSIKCi0tLy8tLQ=="
+    iam_instance_profile = "eks-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+    tags = {
+        k8s.io/cluster-autoscaler/enabled = "true"
+        alpha.eksctl.io/nodegroup-type = "managed"
+        kubernetes.io/cluster/day3-cluster = "owned"
+        eks:cluster-name = "day3-cluster"
+        k8s.io/cluster-autoscaler/day3-cluster = "owned"
+        Name = "day3-app-ng"
+        alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+        eks:nodegroup-name = "day3-app-ng"
+    }
+}
+
+resource "aws_instance" "EC2Instance3" {
+    ami = "ami-055811530249cf67e"
+    instance_type = "t3.small"
+    key_name = "day3"
+    availability_zone = "ap-northeast-2a"
+    tenancy = "default"
+    subnet_id = "subnet-01c96e4762e568238"
     ebs_optimized = true
     vpc_security_group_ids = [
-        "${aws_security_group.EC2SecurityGroup4.id}"
+        "${aws_security_group.EC2SecurityGroup3.id}"
     ]
     source_dest_check = true
     root_block_device {
@@ -707,22 +1303,24 @@ resource "aws_instance" "EC2Instance" {
         volume_type = "gp3"
         delete_on_termination = true
     }
-    iam_instance_profile = "${aws_iam_role.IAMRole.name}"
+    iam_instance_profile = "${aws_iam_role.IAMRole2.name}"
     tags = {
-        Name = "bastion"
+        Name = "day3-bastion"
     }
 }
 
 resource "aws_lb" "ElasticLoadBalancingV2LoadBalancer" {
-    name = "riot-alb"
+    name = "day3-ingress-alb"
     internal = false
     load_balancer_type = "application"
     subnets = [
-        "subnet-006bb80b596d12f19",
-        "subnet-0d656810a69673164"
+        "subnet-01c96e4762e568238",
+        "subnet-058dd7f42efa52d29",
+        "subnet-07f8030461b6aac64"
     ]
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup2.id}"
+        "${aws_security_group.EC2SecurityGroup4.id}",
+        "${aws_security_group.EC2SecurityGroup.id}"
     ]
     ip_address_type = "ipv4"
     access_logs {
@@ -737,44 +1335,298 @@ resource "aws_lb" "ElasticLoadBalancingV2LoadBalancer" {
 }
 
 resource "aws_lb_listener" "ElasticLoadBalancingV2Listener" {
-    load_balancer_arn = "arn:aws:elasticloadbalancing:us-east-1:950274644703:loadbalancer/app/riot-alb/c9a77d535b7ba418"
+    load_balancer_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:loadbalancer/app/day3-ingress-alb/164dd0d555c2f353"
     port = 80
     protocol = "HTTP"
+    tags = 
     default_action {
-        target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:950274644703:targetgroup/admin-tg1/9b5641b080bf69e1"
-        type = "forward"
+        fixed_response {
+            content_type = "text/plain"
+            status_code = "404"
+        }
+        type = "fixed-response"
     }
 }
 
+resource "aws_lb_listener_rule" "ElasticLoadBalancingV2ListenerRule" {
+    priority = "1"
+    listener_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:listener/app/day3-ingress-alb/164dd0d555c2f353/3e4709f86b74a256"
+    condition {
+        path_pattern {
+            values = [
+                "/v1/health",
+                "/v1/health/*"
+            ]
+        }
+    }
+    action {
+        type = "forward"
+        target_group_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-serverse-18ce4ad065/5098e091afc3443f"
+        forward {
+            target_group = [
+                {
+                    arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-serverse-18ce4ad065/5098e091afc3443f"
+                    weight = 1
+                }
+            ]
+            stickiness {
+                enabled = false
+            }
+        }
+    }
+    tags = 
+}
+
+resource "aws_lb_listener_rule" "ElasticLoadBalancingV2ListenerRule2" {
+    priority = "2"
+    listener_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:listener/app/day3-ingress-alb/164dd0d555c2f353/3e4709f86b74a256"
+    condition {
+        
+        query_string {
+            key = "name"
+            value = "*"
+        }
+        
+        path_pattern {
+            values = [
+                "/v1/employee"
+            ]
+        }
+    }
+    action {
+        type = "forward"
+        target_group_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-getservi-68c4cbfaea/fb51d1563218f17a"
+        forward {
+            target_group = [
+                {
+                    arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-getservi-68c4cbfaea/fb51d1563218f17a"
+                    weight = 1
+                }
+            ]
+            stickiness {
+                duration = 3600
+                enabled = false
+            }
+        }
+    }
+    tags = 
+}
+
+resource "aws_lb_listener_rule" "ElasticLoadBalancingV2ListenerRule3" {
+    priority = "3"
+    listener_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:listener/app/day3-ingress-alb/164dd0d555c2f353/3e4709f86b74a256"
+    condition {
+        path_pattern {
+            values = [
+                "/v1/employee/strike",
+                "/v1/employee/strike/*"
+            ]
+        }
+    }
+    action {
+        type = "forward"
+        target_group_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-getservi-68c4cbfaea/fb51d1563218f17a"
+        forward {
+            target_group = [
+                {
+                    arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-getservi-68c4cbfaea/fb51d1563218f17a"
+                    weight = 1
+                }
+            ]
+            stickiness {
+                enabled = false
+            }
+        }
+    }
+    tags = 
+}
+
+resource "aws_lb_listener_rule" "ElasticLoadBalancingV2ListenerRule4" {
+    priority = "4"
+    listener_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:listener/app/day3-ingress-alb/164dd0d555c2f353/3e4709f86b74a256"
+    condition {
+        path_pattern {
+            values = [
+                "/v1/employee"
+            ]
+        }
+    }
+    action {
+        type = "forward"
+        target_group_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-manservi-b5d66e1fe5/18ed9e308b6b5755"
+        forward {
+            target_group = [
+                {
+                    arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-manservi-b5d66e1fe5/18ed9e308b6b5755"
+                    weight = 1
+                }
+            ]
+            stickiness {
+                duration = 3600
+                enabled = false
+            }
+        }
+    }
+    tags = 
+}
+
+resource "aws_lb_listener_rule" "ElasticLoadBalancingV2ListenerRule5" {
+    priority = "5"
+    listener_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:listener/app/day3-ingress-alb/164dd0d555c2f353/3e4709f86b74a256"
+    condition {
+        
+        query_string {
+            key = "name"
+            value = "*"
+        }
+        
+        path_pattern {
+            values = [
+                "/v1/employee/strike"
+            ]
+        }
+    }
+    action {
+        type = "forward"
+        target_group_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-manservi-b5d66e1fe5/18ed9e308b6b5755"
+        forward {
+            target_group = [
+                {
+                    arn = "arn:aws:elasticloadbalancing:ap-northeast-2:226347592148:targetgroup/k8s-day3-manservi-b5d66e1fe5/18ed9e308b6b5755"
+                    weight = 1
+                }
+            ]
+            stickiness {
+                duration = 3600
+                enabled = false
+            }
+        }
+    }
+    tags = 
+}
+
+resource "aws_autoscaling_group" "AutoScalingAutoScalingGroup" {
+    name = "eks-day3-app-ng-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+    mixed_instances_policy {
+        instances_distribution {
+            on_demand_allocation_strategy = "prioritized"
+            on_demand_base_capacity = 0
+            on_demand_percentage_above_base_capacity = 100
+            spot_allocation_strategy = "lowest-price"
+            spot_instance_pools = 2
+        }
+        launch_template {
+            launch_template_specification {
+                launch_template_id = "lt-09a7dc064278f5574"
+                launch_template_name = "eks-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+                version = "1"
+            }
+            override = [
+                {
+                    instance_type = "t3.large"
+                }
+            ]
+        }
+    }
+    min_size = 2
+    max_size = 20
+    desired_capacity = 2
+    default_cooldown = 300
+    availability_zones = [
+        "ap-northeast-2a",
+        "ap-northeast-2b",
+        "ap-northeast-2c"
+    ]
+    health_check_type = "EC2"
+    health_check_grace_period = 15
+    vpc_zone_identifier = [
+        "subnet-05ed591a8b84b42c2",
+        "subnet-08144f18ea0fc04b2",
+        "subnet-07b66daa182167f3c"
+    ]
+    termination_policies = [
+        "AllocationStrategy",
+        "OldestLaunchTemplate",
+        "OldestInstance"
+    ]
+    service_linked_role_arn = "arn:aws:iam::226347592148:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+    metrics_granularity = "1Minute"
+    enabled_metrics = [
+        "WarmPoolMinSize",
+        "GroupDesiredCapacity",
+        "GroupTotalCapacity",
+        "GroupAndWarmPoolTotalCapacity",
+        "GroupTerminatingCapacity",
+        "GroupTerminatingInstances",
+        "GroupMinSize",
+        "GroupStandbyCapacity",
+        "WarmPoolDesiredCapacity",
+        "GroupAndWarmPoolDesiredCapacity",
+        "GroupMaxSize",
+        "GroupPendingCapacity",
+        "WarmPoolTerminatingCapacity",
+        "GroupInServiceCapacity",
+        "WarmPoolTotalCapacity",
+        "WarmPoolWarmedCapacity",
+        "GroupInServiceInstances",
+        "GroupPendingInstances",
+        "GroupStandbyInstances",
+        "WarmPoolPendingCapacity",
+        "GroupTotalInstances"
+    ]
+    tag {
+        key = "eks:cluster-name"
+        value = "day3-cluster"
+        propagate_at_launch = true
+    }
+    tag {
+        key = "eks:nodegroup-name"
+        value = "day3-app-ng"
+        propagate_at_launch = true
+    }
+    tag {
+        key = "k8s.io/cluster-autoscaler/day3-cluster"
+        value = "owned"
+        propagate_at_launch = true
+    }
+    tag {
+        key = "k8s.io/cluster-autoscaler/enabled"
+        value = "true"
+        propagate_at_launch = true
+    }
+    tag {
+        key = "kubernetes.io/cluster/day3-cluster"
+        value = "owned"
+        propagate_at_launch = true
+    }
+}
+
+resource "aws_autoscaling_lifecycle_hook" "AutoScalingLifecycleHook" {
+    name = "Launch-LC-Hook"
+    autoscaling_group_name = "eks-day3-app-ng-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+    notification_target_arn = "arn:aws:sns:ap-northeast-2:823778094414:eks-asg-lifecycle-hook-topic"
+    heartbeat_timeout = 1800
+    default_result = "CONTINUE"
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
+}
+
+resource "aws_autoscaling_lifecycle_hook" "AutoScalingLifecycleHook2" {
+    name = "Terminate-LC-Hook"
+    autoscaling_group_name = "eks-day3-app-ng-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+    notification_target_arn = "arn:aws:sns:ap-northeast-2:823778094414:eks-asg-lifecycle-hook-topic"
+    heartbeat_timeout = 1800
+    default_result = "CONTINUE"
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
+}
+
 resource "aws_security_group" "EC2SecurityGroup" {
-    description = "frontend-sg"
-    name = "frontend-sg"
-    tags = {}
+    description = "[k8s] Shared Backend SecurityGroup for LoadBalancer"
+    name = "k8s-traffic-day3cluster-74871cc4d5"
+    tags = {
+        elbv2.k8s.aws/resource = "backend-sg"
+        elbv2.k8s.aws/cluster = "day3-cluster"
+    }
     vpc_id = "${aws_vpc.EC2VPC.id}"
-    ingress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 0
-        protocol = "-1"
-        to_port = 0
-    }
-    ingress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 8501
-        protocol = "tcp"
-        to_port = 8501
-    }
-    ingress {
-        ipv6_cidr_blocks = [
-            "::/0"
-        ]
-        from_port = 8501
-        protocol = "tcp"
-        to_port = 8501
-    }
     egress {
         cidr_blocks = [
             "0.0.0.0/0"
@@ -786,108 +1638,15 @@ resource "aws_security_group" "EC2SecurityGroup" {
 }
 
 resource "aws_security_group" "EC2SecurityGroup2" {
-    description = "riot-games-alb"
-    name = "riot-games-alb"
-    tags = {}
-    vpc_id = "${aws_vpc.EC2VPC.id}"
-    ingress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 80
-        protocol = "tcp"
-        to_port = 80
-    }
-    egress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 8501
-        protocol = "tcp"
-        to_port = 8501
-    }
-}
-
-resource "aws_security_group" "EC2SecurityGroup3" {
-    description = "backend-sg"
-    name = "backend-sg"
-    tags = {}
-    vpc_id = "${aws_vpc.EC2VPC.id}"
-    ingress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 8080
-        protocol = "tcp"
-        to_port = 8080
-    }
-    ingress {
-        ipv6_cidr_blocks = [
-            "::/0"
-        ]
-        from_port = 8080
-        protocol = "tcp"
-        to_port = 8080
-    }
-    ingress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 0
-        protocol = "-1"
-        to_port = 0
-    }
-    egress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 0
-        protocol = "-1"
-        to_port = 0
-    }
-}
-
-resource "aws_security_group" "EC2SecurityGroup4" {
-    description = "basiton-sg"
-    name = "basiton-sg"
-    tags = {}
-    vpc_id = "${aws_vpc.EC2VPC.id}"
-    ingress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 0
-        protocol = "-1"
-        to_port = 0
-    }
-    ingress {
-        cidr_blocks = [
-            "116.41.254.160/32"
-        ]
-        from_port = 22
-        protocol = "tcp"
-        to_port = 22
-    }
-    egress {
-        cidr_blocks = [
-            "0.0.0.0/0"
-        ]
-        from_port = 0
-        protocol = "-1"
-        to_port = 0
-    }
-}
-
-resource "aws_security_group" "EC2SecurityGroup5" {
-    description = "mysql-db-sg"
-    name = "mysql-db-sg"
+    description = "day3-aurora-mysql-sg"
+    name = "day3-aurora-mysql-sg"
     tags = {
-        Name = "mysql-db-sg"
+        Name = "day3-aurora-mysql-sg"
     }
     vpc_id = "${aws_vpc.EC2VPC.id}"
     ingress {
-        security_groups = [
-            "${aws_security_group.EC2SecurityGroup4.id}"
+        cidr_blocks = [
+            "0.0.0.0/0"
         ]
         from_port = 3306
         protocol = "tcp"
@@ -903,175 +1662,516 @@ resource "aws_security_group" "EC2SecurityGroup5" {
     }
 }
 
+resource "aws_security_group" "EC2SecurityGroup3" {
+    description = "launch-wizard-1 created 2025-01-25T04:42:25.764Z"
+    name = "day3-bastion-sg"
+    tags = {}
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    ingress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        from_port = 22
+        protocol = "tcp"
+        to_port = 22
+    }
+    egress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+}
+
+resource "aws_security_group" "EC2SecurityGroup4" {
+    description = "[k8s] Managed SecurityGroup for LoadBalancer"
+    name = "k8s-day3-day3ingr-fc86330684"
+    tags = {
+        elbv2.k8s.aws/cluster = "day3-cluster"
+        ingress.k8s.aws/stack = "day3/day3-ingress-alb"
+        ingress.k8s.aws/resource = "ManagedLBSecurityGroup"
+    }
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    ingress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        description = ""
+        from_port = 80
+        protocol = "tcp"
+        to_port = 80
+    }
+    egress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+}
+
+resource "aws_security_group" "EC2SecurityGroup5" {
+    description = "Communication between the control plane and worker nodegroups"
+    name = "eksctl-day3-cluster-cluster-ControlPlaneSecurityGroup-hWpVWNvvtxM6"
+    tags = {
+        alpha.eksctl.io/cluster-name = "day3-cluster"
+        eksctl.cluster.k8s.io/v1alpha1/cluster-name = "day3-cluster"
+        alpha.eksctl.io/eksctl-version = "0.202.0"
+        Name = "eksctl-day3-cluster-cluster/ControlPlaneSecurityGroup"
+        alpha.eksctl.io/cluster-oidc-enabled = "true"
+    }
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    egress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+}
+
+resource "aws_security_group" "EC2SecurityGroup6" {
+    description = "Communication between all nodes in the cluster"
+    name = "eksctl-day3-cluster-cluster-ClusterSharedNodeSecurityGroup-UBnjstP5cI0y"
+    tags = {
+        alpha.eksctl.io/cluster-oidc-enabled = "true"
+        Name = "eksctl-day3-cluster-cluster/ClusterSharedNodeSecurityGroup"
+        alpha.eksctl.io/cluster-name = "day3-cluster"
+        alpha.eksctl.io/eksctl-version = "0.202.0"
+        eksctl.cluster.k8s.io/v1alpha1/cluster-name = "day3-cluster"
+    }
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    ingress {
+        security_groups = [
+            "sg-0eaf2ddc3ec3c0a5c"
+        ]
+        description = "Allow nodes to communicate with each other (all ports)"
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+    ingress {
+        security_groups = [
+            "${aws_security_group.EC2SecurityGroup7.id}"
+        ]
+        description = "Allow managed and unmanaged nodes to communicate with each other (all ports)"
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+    egress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+}
+
+resource "aws_security_group" "EC2SecurityGroup7" {
+    description = "EKS created security group applied to ENI that is attached to EKS Control Plane master nodes, as well as any managed workloads."
+    name = "eks-cluster-sg-day3-cluster-487268796"
+    tags = {
+        kubernetes.io/cluster/day3-cluster = "owned"
+        karpenter.sh/discovery = "day3-cluster"
+        Name = "eks-cluster-sg-day3-cluster-487268796"
+    }
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    ingress {
+        security_groups = [
+            "${aws_security_group.EC2SecurityGroup.id}"
+        ]
+        description = "elbv2.k8s.aws/targetGroupBinding=shared"
+        from_port = 8080
+        protocol = "tcp"
+        to_port = 8081
+    }
+    ingress {
+        security_groups = [
+            "sg-0e5388ababcb21091"
+        ]
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+    ingress {
+        security_groups = [
+            "sg-0eaf2ddc3ec3c0a5c"
+        ]
+        description = "Allow unmanaged nodes to communicate with control plane (all ports)"
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+    egress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+}
+
+resource "aws_security_group" "EC2SecurityGroup8" {
+    description = "launch-wizard-1 created 2025-01-25T05:28:18.715Z"
+    name = "launch-wizard-1"
+    tags = {}
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    ingress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+    egress {
+        cidr_blocks = [
+            "0.0.0.0/0"
+        ]
+        from_port = 0
+        protocol = "-1"
+        to_port = 0
+    }
+}
+
+resource "aws_launch_template" "EC2LaunchTemplate" {
+    name = "eks-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+    tag_specifications {
+        resource_type = "volume"
+        tags {
+            Name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-type = "managed"
+            eks:nodegroup-name = "day3-app-ng"
+            eks:cluster-name = "day3-cluster"
+        }
+    }
+    tag_specifications {
+        resource_type = "instance"
+        tags {
+            Name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-type = "managed"
+            eks:nodegroup-name = "day3-app-ng"
+            eks:cluster-name = "day3-cluster"
+        }
+    }
+    tag_specifications {
+        resource_type = "network-interface"
+        tags {
+            Name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-type = "managed"
+            eks:nodegroup-name = "day3-app-ng"
+            eks:cluster-name = "day3-cluster"
+        }
+    }
+    user_data = "TUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSIvLyIKCi0tLy8KQ29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9ub2RlLmVrcy5hd3MKCi0tLQphcGlWZXJzaW9uOiBub2RlLmVrcy5hd3MvdjFhbHBoYTEKa2luZDogTm9kZUNvbmZpZwpzcGVjOgogIGNsdXN0ZXI6CiAgICBhcGlTZXJ2ZXJFbmRwb2ludDogaHR0cHM6Ly80Nzc3OTMyMkVFMjJGNjk0RkE1MEE3OTVDQ0M5ODU5RS55bDQuYXAtbm9ydGhlYXN0LTIuZWtzLmFtYXpvbmF3cy5jb20KICAgIGNlcnRpZmljYXRlQXV0aG9yaXR5OiBMUzB0TFMxQ1JVZEpUaUJEUlZKVVNVWkpRMEZVUlMwdExTMHRDazFKU1VSQ1ZFTkRRV1V5WjBGM1NVSkJaMGxKVEdoVVNTOTNZMVUwVEhkM1JGRlpTa3R2V2tsb2RtTk9RVkZGVEVKUlFYZEdWRVZVVFVKRlIwRXhWVVVLUVhoTlMyRXpWbWxhV0VwMVdsaFNiR042UVdWR2R6QjVUbFJCZUUxcVZYZE9WRTAwVFZSa1lVWjNNSHBPVkVGNFRXcE5kMDVVVVhwTlZHUmhUVUpWZUFwRmVrRlNRbWRPVmtKQlRWUkRiWFF4V1cxV2VXSnRWakJhV0UxM1oyZEZhVTFCTUVkRFUzRkhVMGxpTTBSUlJVSkJVVlZCUVRSSlFrUjNRWGRuWjBWTENrRnZTVUpCVVVSRlZYSlpkQzh2Y1ZSM1MzVkxSbFZLZVRCalV5dHRkRzVJYjJSS2VIVk9kVlI1VVZwaFpIWk5lRE5PT0VjcldrSjNPVlZNYldndmFHUUtUbVIxZUZSeWFFUnZhRlJUTDBsNmVIZzFORlJvWW5abllXOUdNR2xPWXpFelRXdEhUbk12WlZsbWNFMHZUMHhtYTB4SGJuQlRORVJrWWxGWlZqQlNXUW8zU1hndkswTjZZVzVrZVhsdVZHRnRZMk5xWldSM1pFbDJUbFZzV1VwVU1VeG9WM2xNY1dvM1FUbHBWWHB6SzNWSlQxTlBUM05JZGpKM0wzUlhRbkZKQ25CblNqTXlRamRPUml0RFZUTTRVekV2YmpodFUxUlZUVU5FYVhjMFYyWkdWMGRTT0hSYWIxRjZRVlV6VUdOeVZYTTJObkJyU1VWU1NrOTZWbTlGZG5rS1VrdE9NRGwzY2pGaGNGaGFTRXBXTVVSbVFqVk5ka0ZRTDNkbmJXMHZMM0I1TlRWcVZuRTROemhWUVhoMFRXZE9NSEpaTkhaM2RXSXlZVk16VEVzeWFRcDZhSFZqYUdNeUt5dFpPRkV5WkVGRVJWRjJaV052WTJGb2JuTkVRV2ROUWtGQlIycFhWRUpZVFVFMFIwRXhWV1JFZDBWQ0wzZFJSVUYzU1VOd1JFRlFDa0puVGxaSVVrMUNRV1k0UlVKVVFVUkJVVWd2VFVJd1IwRXhWV1JFWjFGWFFrSlJaVlZhWTJSRlRHY3dSMnh6WkZGeWRVeE9TbFpNUVZkV0syRkVRVllLUW1kT1ZraFNSVVZFYWtGTloyZHdjbVJYU214amJUVnNaRWRXZWsxQk1FZERVM0ZIVTBsaU0wUlJSVUpEZDFWQlFUUkpRa0ZSUTNoUlZEWlpiVEJKWlFwbWVrRm5ZekZ4TW1KdWJuVmxZbGM1UjBNMFpqRktlbGh5UlV4dU9GbHdRbTVvVXl0SVIxQlJiR2hJU0RRdmRHVnNNVmc0Y0ZNM1FreHZjV0l6TjJreUNqQk9ZbXBTWVVWTFowaEZOV3RMU21KdFpUbEZPVmxVWm5aMFRIZzNVMDlqTVZwM2MwZENWVlpFVFRKNlpFSktZVVoyT0cxQ1VUSmpaR1ZOVVVsM2NXNEtNMDV4TUc1Uk1YQkRaVWx0Y1RGVEwyTnhXVlZIVVhWcWNVdFRjbkZDTmxFNUx6UkNUazVwVUU1SGVXaHViV3RRVkdORGNHaE1aSE4zYjJaNE1YbDNSQXBIVFdSSFEycFpObWxDYm1KMkwzaE9URFZOZVRKdVNIWlFRMmhwVm10VlVtNUROV0l5UVhrNVRGUk9iMnh2UkdkTFF6Qk1PRTluUnpKQ1oxRXljWHB5Q2xVeU5HSjNiamxqZERSd2MwbzNkVVYxWlN0NldWaHVWVU42VUZSaWRqVXZOWFpLZW1OUFNsb3pUbmh3TW1abWNuRmtPVWRGUzFSd2VVczNhV05TUjFrS2QyYzRWMWQwZGpSV2RVZGhDaTB0TFMwdFJVNUVJRU5GVWxSSlJrbERRVlJGTFMwdExTMEsKICAgIGNpZHI6IDE3Mi4yMC4wLjAvMTYKICAgIG5hbWU6IGRheTMtY2x1c3RlcgogIGt1YmVsZXQ6CiAgICBjb25maWc6CiAgICAgIG1heFBvZHM6IDM1CiAgICAgIGNsdXN0ZXJETlM6CiAgICAgIC0gMTcyLjIwLjAuMTAKICAgIGZsYWdzOgogICAgLSAiLS1ub2RlLWxhYmVscz1la3MuYW1hem9uYXdzLmNvbS9zb3VyY2VMYXVuY2hUZW1wbGF0ZVZlcnNpb249MSxhbHBoYS5la3NjdGwuaW8vY2x1c3Rlci1uYW1lPWRheTMtY2x1c3RlcixhbHBoYS5la3NjdGwuaW8vbm9kZWdyb3VwLW5hbWU9ZGF5My1hcHAtbmcscm9sZT1hcHBzLGVrcy5hbWF6b25hd3MuY29tL25vZGVncm91cC1pbWFnZT1hbWktMDVmMTExNjRjNTk4ZWEwNzksZWtzLmFtYXpvbmF3cy5jb20vY2FwYWNpdHlUeXBlPU9OX0RFTUFORCxla3MuYW1hem9uYXdzLmNvbS9ub2RlZ3JvdXA9ZGF5My1hcHAtbmcsZWtzLmFtYXpvbmF3cy5jb20vc291cmNlTGF1bmNoVGVtcGxhdGVJZD1sdC0wYjBiYjc1YjYzMmM5ZTZlNSIKCi0tLy8tLQ=="
+    iam_instance_profile {
+        name = "eks-e2ca4e02-248f-cb7e-45a7-6fa9b0230007"
+    }
+    vpc_security_group_ids = [
+        "${aws_security_group.EC2SecurityGroup7.id}"
+    ]
+    image_id = "ami-05f11164c598ea079"
+}
+
+resource "aws_launch_template" "EC2LaunchTemplate2" {
+    name = "eksctl-day3-cluster-nodegroup-day3-app-ng"
+    tag_specifications {
+        resource_type = "instance"
+        tags {
+            Name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-type = "managed"
+        }
+    }
+    tag_specifications {
+        resource_type = "volume"
+        tags {
+            Name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-type = "managed"
+        }
+    }
+    tag_specifications {
+        resource_type = "network-interface"
+        tags {
+            Name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+            alpha.eksctl.io/nodegroup-type = "managed"
+        }
+    }
+    vpc_security_group_ids = [
+        "${aws_security_group.EC2SecurityGroup7.id}"
+    ]
+}
+
 resource "aws_lb_target_group" "ElasticLoadBalancingV2TargetGroup" {
     health_check {
-        interval = 30
-        path = "/"
+        interval = 5
+        path = "/v1/health"
         port = "traffic-port"
         protocol = "HTTP"
-        timeout = 5
+        timeout = 2
         unhealthy_threshold = 2
-        healthy_threshold = 5
+        healthy_threshold = 2
         matcher = "200"
     }
-    port = 8501
+    port = 8081
     protocol = "HTTP"
     target_type = "ip"
     vpc_id = "${aws_vpc.EC2VPC.id}"
-    name = "admin-tg1"
+    name = "k8s-day3-getservi-68c4cbfaea"
+}
+
+resource "aws_lb_target_group" "ElasticLoadBalancingV2TargetGroup2" {
+    health_check {
+        interval = 5
+        path = "/v1/health"
+        port = "traffic-port"
+        protocol = "HTTP"
+        timeout = 2
+        unhealthy_threshold = 2
+        healthy_threshold = 2
+        matcher = "200"
+    }
+    port = 8080
+    protocol = "HTTP"
+    target_type = "ip"
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    name = "k8s-day3-manservi-b5d66e1fe5"
+}
+
+resource "aws_lb_target_group" "ElasticLoadBalancingV2TargetGroup3" {
+    health_check {
+        interval = 5
+        path = "/v1/health"
+        port = "traffic-port"
+        protocol = "HTTP"
+        timeout = 2
+        unhealthy_threshold = 2
+        healthy_threshold = 2
+        matcher = "200"
+    }
+    port = 8080
+    protocol = "HTTP"
+    target_type = "ip"
+    vpc_id = "${aws_vpc.EC2VPC.id}"
+    name = "k8s-day3-serverse-18ce4ad065"
 }
 
 resource "aws_ebs_volume" "EC2Volume" {
-    availability_zone = "us-east-1a"
-    encrypted = true
+    availability_zone = "ap-northeast-2a"
+    encrypted = false
     size = 8
     type = "gp3"
-    snapshot_id = "snap-0938e311dc85e7433"
-    kms_key_id = "arn:aws:kms:us-east-1:950274644703:key/d3802a01-62a7-4acc-a4fb-33bf70fb90ef"
+    snapshot_id = "snap-041372d701259bac4"
     tags = {}
 }
 
+resource "aws_ebs_volume" "EC2Volume2" {
+    availability_zone = "ap-northeast-2c"
+    encrypted = true
+    size = 80
+    type = "gp3"
+    snapshot_id = "snap-066e6f3d8729af4fc"
+    kms_key_id = "arn:aws:kms:ap-northeast-2:226347592148:key/8e086fd7-798c-4fed-9af8-c685be08c480"
+    tags = {
+        Name = "day3-app-ng"
+        alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+        alpha.eksctl.io/nodegroup-type = "managed"
+        eks:cluster-name = "day3-cluster"
+        eks:nodegroup-name = "day3-app-ng"
+    }
+}
+
+resource "aws_ebs_volume" "EC2Volume3" {
+    availability_zone = "ap-northeast-2a"
+    encrypted = true
+    size = 80
+    type = "gp3"
+    snapshot_id = "snap-066e6f3d8729af4fc"
+    kms_key_id = "arn:aws:kms:ap-northeast-2:226347592148:key/8e086fd7-798c-4fed-9af8-c685be08c480"
+    tags = {
+        alpha.eksctl.io/nodegroup-name = "day3-app-ng"
+        alpha.eksctl.io/nodegroup-type = "managed"
+        Name = "day3-app-ng"
+        eks:cluster-name = "day3-cluster"
+        eks:nodegroup-name = "day3-app-ng"
+    }
+}
+
 resource "aws_volume_attachment" "EC2VolumeAttachment" {
-    volume_id = "vol-0a1f19a45f02d0664"
-    instance_id = "i-0ddaba4a9418b535e"
+    volume_id = "vol-070ad54c5e5e56153"
+    instance_id = "i-0e806af3b49502552"
+    device_name = "/dev/xvda"
+}
+
+resource "aws_volume_attachment" "EC2VolumeAttachment2" {
+    volume_id = "vol-0ef91b8b78c9bfe58"
+    instance_id = "i-016223c414b576245"
+    device_name = "/dev/xvda"
+}
+
+resource "aws_volume_attachment" "EC2VolumeAttachment3" {
+    volume_id = "vol-0548599a22c3140e4"
+    instance_id = "i-06346be8a6fc0e60d"
     device_name = "/dev/xvda"
 }
 
 resource "aws_network_interface" "EC2NetworkInterface" {
-    description = "RDSNetworkInterface"
+    description = "VPC Endpoint Interface vpce-09faf754a7cf6ef34"
     private_ips = [
-        "10.0.178.63"
+        "10.0.156.95"
     ]
-    subnet_id = "subnet-00c0efcb0614db99c"
+    subnet_id = "subnet-08144f18ea0fc04b2"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
+        "sg-0563657dad9896f5f"
     ]
 }
 
 resource "aws_network_interface" "EC2NetworkInterface2" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/9812f5e5-8c97-404c-8f80-f2f28a8a2708"
+    description = "ELB app/day3-ingress-alb/164dd0d555c2f353"
     private_ips = [
-        "10.0.156.194"
+        "10.0.19.74"
     ]
-    subnet_id = "subnet-01a6cf3e86c0e6af2"
+    subnet_id = "subnet-058dd7f42efa52d29"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup3.id}"
+        "${aws_security_group.EC2SecurityGroup.id}",
+        "${aws_security_group.EC2SecurityGroup4.id}"
     ]
 }
 
 resource "aws_network_interface" "EC2NetworkInterface3" {
-    description = "VPC Endpoint Interface vpce-0af0e655f20ceaa88"
+    description = "Interface for NAT Gateway nat-045d0a99901b5f796"
     private_ips = [
-        "10.0.176.68"
+        "10.0.24.144"
     ]
-    subnet_id = "subnet-00c0efcb0614db99c"
-    source_dest_check = true
-    security_groups = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
-    ]
+    subnet_id = "subnet-058dd7f42efa52d29"
+    source_dest_check = false
 }
 
 resource "aws_network_interface" "EC2NetworkInterface4" {
-    description = "RDSNetworkInterface"
+    description = "VPC Endpoint Interface vpce-0cccac094d5b5dfe4"
     private_ips = [
-        "10.0.188.116"
+        "10.0.158.244"
     ]
-    subnet_id = "subnet-00c0efcb0614db99c"
+    subnet_id = "subnet-08144f18ea0fc04b2"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
+        "sg-0563657dad9896f5f"
     ]
 }
 
 resource "aws_network_interface" "EC2NetworkInterface5" {
-    description = "Network interface for DBProxy proxy-1734138353499-riotgames-db-1"
+    description = "VPC Endpoint Interface vpce-0721bf2d938aa9419"
     private_ips = [
-        "10.0.187.189"
+        "10.0.145.72"
     ]
-    subnet_id = "subnet-00c0efcb0614db99c"
+    subnet_id = "subnet-08144f18ea0fc04b2"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
+        "sg-0563657dad9896f5f"
     ]
 }
 
 resource "aws_network_interface" "EC2NetworkInterface6" {
-    description = "ELB app/riot-alb/c9a77d535b7ba418"
+    description = "Amazon EKS day3-cluster"
     private_ips = [
-        "10.0.21.35"
+        "10.0.150.120"
     ]
-    subnet_id = "subnet-0d656810a69673164"
+    subnet_id = "subnet-08144f18ea0fc04b2"
+    source_dest_check = true
+    security_groups = [
+        "${aws_security_group.EC2SecurityGroup5.id}",
+        "${aws_security_group.EC2SecurityGroup7.id}"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface7" {
+    description = "RDSNetworkInterface"
+    private_ips = [
+        "10.0.159.142"
+    ]
+    subnet_id = "subnet-08144f18ea0fc04b2"
     source_dest_check = true
     security_groups = [
         "${aws_security_group.EC2SecurityGroup2.id}"
     ]
 }
 
-resource "aws_network_interface" "EC2NetworkInterface7" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/f5c94c87-dbbc-46c8-9cc9-e98f37a21c20"
-    private_ips = [
-        "10.0.146.69"
-    ]
-    subnet_id = "subnet-01a6cf3e86c0e6af2"
-    source_dest_check = true
-    security_groups = [
-        "${aws_security_group.EC2SecurityGroup.id}"
-    ]
-}
-
 resource "aws_network_interface" "EC2NetworkInterface8" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/a16c3059-c923-442d-aaf8-0ba1dc7d802a"
+    description = ""
     private_ips = [
-        "10.0.151.23"
+        "10.0.128.212",
+        "10.0.143.145",
+        "10.0.137.66",
+        "10.0.138.19",
+        "10.0.131.36",
+        "10.0.138.197",
+        "10.0.140.246",
+        "10.0.129.38",
+        "10.0.131.58",
+        "10.0.129.251",
+        "10.0.134.158",
+        "10.0.130.110"
     ]
-    subnet_id = "subnet-01a6cf3e86c0e6af2"
+    subnet_id = "subnet-05ed591a8b84b42c2"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup3.id}"
+        "${aws_security_group.EC2SecurityGroup7.id}"
     ]
 }
 
 resource "aws_network_interface" "EC2NetworkInterface9" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/88664fb1-ba02-4ae1-8705-5769c9d63556"
+    description = "VPC Endpoint Interface vpce-0cccac094d5b5dfe4"
     private_ips = [
-        "10.0.154.255"
+        "10.0.139.217"
     ]
-    subnet_id = "subnet-01a6cf3e86c0e6af2"
+    subnet_id = "subnet-05ed591a8b84b42c2"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup3.id}"
+        "sg-0563657dad9896f5f"
     ]
 }
 
 resource "aws_network_interface" "EC2NetworkInterface10" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/7c3d2e48-c79b-4b89-8287-8923dc46b42e"
+    description = "Interface for NAT Gateway nat-032f65150a0564cae"
     private_ips = [
-        "10.0.150.161"
+        "10.0.3.204"
     ]
-    subnet_id = "subnet-01a6cf3e86c0e6af2"
-    source_dest_check = true
-    security_groups = [
-        "${aws_security_group.EC2SecurityGroup3.id}"
-    ]
-}
-
-resource "aws_network_interface" "EC2NetworkInterface11" {
-    description = "Interface for NAT Gateway nat-06c5bc9e5a8d58cb9"
-    private_ips = [
-        "10.0.29.24"
-    ]
-    subnet_id = "subnet-0d656810a69673164"
+    subnet_id = "subnet-01c96e4762e568238"
     source_dest_check = false
 }
 
-resource "aws_network_interface" "EC2NetworkInterface12" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/3e5bc4c8-3207-46b0-8853-8f84d945ab97"
+resource "aws_network_interface" "EC2NetworkInterface11" {
+    description = "VPC Endpoint Interface vpce-0721bf2d938aa9419"
     private_ips = [
-        "10.0.128.184"
+        "10.0.130.112"
     ]
-    subnet_id = "subnet-0ed83f8d0a5aee854"
+    subnet_id = "subnet-05ed591a8b84b42c2"
+    source_dest_check = true
+    security_groups = [
+        "sg-0563657dad9896f5f"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface12" {
+    description = ""
+    private_ips = [
+        "10.0.3.196"
+    ]
+    subnet_id = "subnet-01c96e4762e568238"
     source_dest_check = true
     security_groups = [
         "${aws_security_group.EC2SecurityGroup3.id}"
@@ -1079,1454 +2179,532 @@ resource "aws_network_interface" "EC2NetworkInterface12" {
 }
 
 resource "aws_network_interface" "EC2NetworkInterface13" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/e0386a6e-f5dd-4776-a953-ebb5dc8d567f"
+    description = "aws-K8S-i-06346be8a6fc0e60d"
     private_ips = [
-        "10.0.134.242"
+        "10.0.138.114",
+        "10.0.139.210",
+        "10.0.129.35",
+        "10.0.128.51",
+        "10.0.143.215",
+        "10.0.128.10",
+        "10.0.135.44",
+        "10.0.129.172",
+        "10.0.133.252",
+        "10.0.131.78",
+        "10.0.138.94",
+        "10.0.129.31"
     ]
-    subnet_id = "subnet-0ed83f8d0a5aee854"
+    subnet_id = "subnet-05ed591a8b84b42c2"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup3.id}"
+        "${aws_security_group.EC2SecurityGroup7.id}"
     ]
 }
 
 resource "aws_network_interface" "EC2NetworkInterface14" {
-    description = "ELB app/riot-alb/c9a77d535b7ba418"
+    description = "ELB app/day3-ingress-alb/164dd0d555c2f353"
     private_ips = [
-        "10.0.12.237"
+        "10.0.6.75"
     ]
-    subnet_id = "subnet-006bb80b596d12f19"
+    subnet_id = "subnet-01c96e4762e568238"
+    source_dest_check = true
+    security_groups = [
+        "${aws_security_group.EC2SecurityGroup.id}",
+        "${aws_security_group.EC2SecurityGroup4.id}"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface15" {
+    description = "VPC Endpoint Interface vpce-09faf754a7cf6ef34"
+    private_ips = [
+        "10.0.140.115"
+    ]
+    subnet_id = "subnet-05ed591a8b84b42c2"
+    source_dest_check = true
+    security_groups = [
+        "sg-0563657dad9896f5f"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface16" {
+    description = "Interface for NAT Gateway nat-052e9daee6cc1b4df"
+    private_ips = [
+        "10.0.45.0"
+    ]
+    subnet_id = "subnet-07f8030461b6aac64"
+    source_dest_check = false
+}
+
+resource "aws_network_interface" "EC2NetworkInterface17" {
+    description = "VPC Endpoint Interface vpce-0cccac094d5b5dfe4"
+    private_ips = [
+        "10.0.160.64"
+    ]
+    subnet_id = "subnet-07b66daa182167f3c"
+    source_dest_check = true
+    security_groups = [
+        "sg-0563657dad9896f5f"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface18" {
+    description = ""
+    private_ips = [
+        "10.0.175.250",
+        "10.0.163.160",
+        "10.0.160.145",
+        "10.0.166.97",
+        "10.0.175.50",
+        "10.0.165.135",
+        "10.0.167.231",
+        "10.0.167.24",
+        "10.0.175.218",
+        "10.0.161.187",
+        "10.0.167.62",
+        "10.0.175.63"
+    ]
+    subnet_id = "subnet-07b66daa182167f3c"
+    source_dest_check = true
+    security_groups = [
+        "${aws_security_group.EC2SecurityGroup7.id}"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface19" {
+    description = "aws-K8S-i-016223c414b576245"
+    private_ips = [
+        "10.0.169.193",
+        "10.0.171.18",
+        "10.0.165.19",
+        "10.0.167.180",
+        "10.0.172.37",
+        "10.0.173.54",
+        "10.0.165.71",
+        "10.0.167.57",
+        "10.0.166.153",
+        "10.0.170.155",
+        "10.0.167.123",
+        "10.0.173.254"
+    ]
+    subnet_id = "subnet-07b66daa182167f3c"
+    source_dest_check = true
+    security_groups = [
+        "${aws_security_group.EC2SecurityGroup7.id}"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface20" {
+    description = "VPC Endpoint Interface vpce-09faf754a7cf6ef34"
+    private_ips = [
+        "10.0.168.81"
+    ]
+    subnet_id = "subnet-07b66daa182167f3c"
+    source_dest_check = true
+    security_groups = [
+        "sg-0563657dad9896f5f"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface21" {
+    description = "VPC Endpoint Interface vpce-0721bf2d938aa9419"
+    private_ips = [
+        "10.0.163.238"
+    ]
+    subnet_id = "subnet-07b66daa182167f3c"
+    source_dest_check = true
+    security_groups = [
+        "sg-0563657dad9896f5f"
+    ]
+}
+
+resource "aws_network_interface" "EC2NetworkInterface22" {
+    description = "RDSNetworkInterface"
+    private_ips = [
+        "10.0.164.87"
+    ]
+    subnet_id = "subnet-07b66daa182167f3c"
     source_dest_check = true
     security_groups = [
         "${aws_security_group.EC2SecurityGroup2.id}"
     ]
 }
 
-resource "aws_network_interface" "EC2NetworkInterface15" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/88135ed2-bb8c-420c-a984-60137c1b6f16"
+resource "aws_network_interface" "EC2NetworkInterface23" {
+    description = "ELB app/day3-ingress-alb/164dd0d555c2f353"
     private_ips = [
-        "10.0.139.12"
+        "10.0.45.6"
     ]
-    subnet_id = "subnet-0ed83f8d0a5aee854"
+    subnet_id = "subnet-07f8030461b6aac64"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup3.id}"
-    ]
-}
-
-resource "aws_network_interface" "EC2NetworkInterface16" {
-    description = ""
-    private_ips = [
-        "10.0.15.26"
-    ]
-    subnet_id = "subnet-006bb80b596d12f19"
-    source_dest_check = true
-    security_groups = [
+        "${aws_security_group.EC2SecurityGroup.id}",
         "${aws_security_group.EC2SecurityGroup4.id}"
     ]
 }
 
-resource "aws_network_interface" "EC2NetworkInterface17" {
-    description = "VPC Endpoint Interface vpce-0af0e655f20ceaa88"
+resource "aws_network_interface" "EC2NetworkInterface24" {
+    description = "Amazon EKS day3-cluster"
     private_ips = [
-        "10.0.174.225"
+        "10.0.170.88"
     ]
-    subnet_id = "subnet-08436219347ee30dd"
+    subnet_id = "subnet-07b66daa182167f3c"
     source_dest_check = true
     security_groups = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
-    ]
-}
-
-resource "aws_network_interface" "EC2NetworkInterface18" {
-    description = "Interface for NAT Gateway nat-07727eb0e8fe9a8e7"
-    private_ips = [
-        "10.0.1.222"
-    ]
-    subnet_id = "subnet-006bb80b596d12f19"
-    source_dest_check = false
-}
-
-resource "aws_network_interface" "EC2NetworkInterface19" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/20b831b1-5288-4bda-8332-4509ae1d069f"
-    private_ips = [
-        "10.0.132.96"
-    ]
-    subnet_id = "subnet-0ed83f8d0a5aee854"
-    source_dest_check = true
-    security_groups = [
-        "${aws_security_group.EC2SecurityGroup.id}"
-    ]
-}
-
-resource "aws_network_interface" "EC2NetworkInterface20" {
-    description = "RDSNetworkInterface"
-    private_ips = [
-        "10.0.167.144"
-    ]
-    subnet_id = "subnet-08436219347ee30dd"
-    source_dest_check = true
-    security_groups = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
-    ]
-}
-
-resource "aws_network_interface" "EC2NetworkInterface21" {
-    description = "arn:aws:ecs:us-east-1:950274644703:attachment/2ae7589a-40b1-4cd4-8fcf-c42f39eba1ee"
-    private_ips = [
-        "10.0.128.130"
-    ]
-    subnet_id = "subnet-0ed83f8d0a5aee854"
-    source_dest_check = true
-    security_groups = [
-        "${aws_security_group.EC2SecurityGroup3.id}"
-    ]
-}
-
-resource "aws_network_interface" "EC2NetworkInterface22" {
-    description = "Network interface for DBProxy proxy-1734138353499-riotgames-db-1"
-    private_ips = [
-        "10.0.165.54"
-    ]
-    subnet_id = "subnet-08436219347ee30dd"
-    source_dest_check = true
-    security_groups = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
-    ]
-}
-
-resource "aws_network_interface" "EC2NetworkInterface23" {
-    description = "RDSNetworkInterface"
-    private_ips = [
-        "10.0.163.174"
-    ]
-    subnet_id = "subnet-08436219347ee30dd"
-    source_dest_check = true
-    security_groups = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
+        "${aws_security_group.EC2SecurityGroup5.id}",
+        "${aws_security_group.EC2SecurityGroup7.id}"
     ]
 }
 
 resource "aws_network_interface_attachment" "EC2NetworkInterfaceAttachment" {
-    network_interface_id = "eni-0c850a08223e9a849"
+    network_interface_id = "eni-01b2bac899042482b"
     device_index = 0
-    instance_id = "i-0ddaba4a9418b535e"
+    instance_id = "i-06346be8a6fc0e60d"
+}
+
+resource "aws_network_interface_attachment" "EC2NetworkInterfaceAttachment2" {
+    network_interface_id = "eni-0ddae752bfd238a99"
+    device_index = 0
+    instance_id = "i-0e806af3b49502552"
+}
+
+resource "aws_network_interface_attachment" "EC2NetworkInterfaceAttachment3" {
+    network_interface_id = "eni-0c37bc047ceb25e1d"
+    device_index = 1
+    instance_id = "i-06346be8a6fc0e60d"
+}
+
+resource "aws_network_interface_attachment" "EC2NetworkInterfaceAttachment4" {
+    network_interface_id = "eni-0d5b1202067d04623"
+    device_index = 0
+    instance_id = "i-016223c414b576245"
+}
+
+resource "aws_network_interface_attachment" "EC2NetworkInterfaceAttachment5" {
+    network_interface_id = "eni-0dfe4e1217a91abfd"
+    device_index = 1
+    instance_id = "i-016223c414b576245"
 }
 
 resource "aws_key_pair" "EC2KeyPair" {
     public_key = "REPLACEME"
-    key_name = "bastion"
+    key_name = "day3"
 }
 
-resource "aws_db_instance" "RDSDBInstance" {
-    identifier = "riotgames-db-1"
-    allocated_storage = 100
-    instance_class = "db.t3.xlarge"
-    engine = "mysql"
-    username = "root"
-    password = "REPLACEME"
-    backup_window = "08:19-08:49"
-    backup_retention_period = 7
-    availability_zone = "us-east-1a"
-    maintenance_window = "wed:10:16-wed:10:46"
-    multi_az = true
-    engine_version = "8.0.40"
-    auto_minor_version_upgrade = true
-    license_model = "general-public-license"
-    publicly_accessible = false
-    storage_type = "gp2"
+resource "aws_rds_cluster" "RDSDBCluster" {
+    availability_zones = [
+        "ap-northeast-2b",
+        "ap-northeast-2c",
+        "ap-northeast-2a"
+    ]
+    backup_retention_period = 1
+    database_name = "day3"
+    cluster_identifier = "day3-database-1"
+    db_cluster_parameter_group_name = "default.aurora-mysql8.0"
+    db_subnet_group_name = "day3-aurora-mysql-sgp"
+    engine = "aurora-mysql"
     port = 3306
+    master_username = "root"
+    master_password = "REPLACEME"
+    preferred_backup_window = "16:31-17:01"
+    preferred_maintenance_window = "fri:17:54-fri:18:24"
+    vpc_security_group_ids = [
+        "${aws_security_group.EC2SecurityGroup2.id}"
+    ]
     storage_encrypted = true
-    kms_key_id = "arn:aws:kms:us-east-1:950274644703:key/64b0af9b-9d4e-471e-be63-20a0a251614d"
-    copy_tags_to_snapshot = true
-    monitoring_interval = 60
+    kms_key_id = "arn:aws:kms:ap-northeast-2:226347592148:key/3c048603-0a8c-4e6d-8c02-798f54fbe98e"
+    engine_version = "8.0.mysql_aurora.3.05.2"
     iam_database_authentication_enabled = false
+    engine_mode = "provisioned"
     deletion_protection = true
-    db_subnet_group_name = "mysql-db-subnet-group"
-    vpc_security_group_ids = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
-    ]
-    max_allocated_storage = 1000
 }
 
-resource "aws_db_instance" "RDSDBInstance2" {
-    identifier = "riotgames-db-1-ro"
-    allocated_storage = 100
-    instance_class = "db.t3.xlarge"
-    engine = "mysql"
-    replicate_source_db = "riotgames-db-1"
-    availability_zone = "us-east-1b"
-    maintenance_window = "wed:10:16-wed:10:46"
-    multi_az = true
-    engine_version = "8.0.40"
+resource "aws_rds_cluster_instance" "RDSDBInstance" {
+    identifier = "day3-database-1-instance-1"
+    instance_class = "db.t3.large"
+    engine = "aurora-mysql"
+    name = "day3"
+    preferred_backup_window = "16:31-17:01"
+    availability_zone = "ap-northeast-2b"
+    preferred_maintenance_window = "tue:15:10-tue:15:40"
+    engine_version = "8.0.mysql_aurora.3.05.2"
     auto_minor_version_upgrade = true
-    license_model = "general-public-license"
     publicly_accessible = false
-    storage_type = "gp2"
     port = 3306
-    storage_encrypted = true
-    kms_key_id = "arn:aws:kms:us-east-1:950274644703:key/64b0af9b-9d4e-471e-be63-20a0a251614d"
-    copy_tags_to_snapshot = false
-    monitoring_interval = 0
-    iam_database_authentication_enabled = false
-    deletion_protection = false
-    db_subnet_group_name = "mysql-db-subnet-group"
-    vpc_security_group_ids = [
-        "${aws_security_group.EC2SecurityGroup5.id}"
-    ]
-    max_allocated_storage = 1000
+    cluster_identifier = "day3-database-1"
+    kms_key_id = "arn:aws:kms:ap-northeast-2:226347592148:key/3c048603-0a8c-4e6d-8c02-798f54fbe98e"
+    monitoring_interval = 60
+    db_subnet_group_name = "day3-aurora-mysql-sgp"
+}
+
+resource "aws_rds_cluster_instance" "RDSDBInstance2" {
+    identifier = "day3-database-1-instance-1-ap-northeast-2c"
+    instance_class = "db.t3.large"
+    engine = "aurora-mysql"
+    name = "day3"
+    preferred_backup_window = "16:31-17:01"
+    availability_zone = "ap-northeast-2c"
+    preferred_maintenance_window = "fri:20:25-fri:20:55"
+    engine_version = "8.0.mysql_aurora.3.05.2"
+    auto_minor_version_upgrade = true
+    publicly_accessible = false
+    port = 3306
+    cluster_identifier = "day3-database-1"
+    kms_key_id = "arn:aws:kms:ap-northeast-2:226347592148:key/3c048603-0a8c-4e6d-8c02-798f54fbe98e"
+    monitoring_interval = 60
+    db_subnet_group_name = "day3-aurora-mysql-sgp"
 }
 
 resource "aws_db_subnet_group" "RDSDBSubnetGroup" {
-    description = "mysql-db-subnet-group"
-    name = "mysql-db-subnet-group"
+    description = "day3-aurora-mysql-sgp"
+    name = "day3-aurora-mysql-sgp"
     subnet_ids = [
-        "subnet-00c0efcb0614db99c",
-        "subnet-08436219347ee30dd"
+        "subnet-05ed591a8b84b42c2",
+        "subnet-08144f18ea0fc04b2",
+        "subnet-07b66daa182167f3c"
     ]
 }
 
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/admin-svc-AlarmHigh-4af5329c-2a33-4147-92cd-0f59f344ad8b"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:003a7cdd-519c-4913-b6b5-24162a41bff3:resource/ecs/service/riot-games-cluster/admin-svc:policyName/CPU:createdBy/bf231cd8-28c7-40f5-a3fe-f188b6098246."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:003a7cdd-519c-4913-b6b5-24162a41bff3:resource/ecs/service/riot-games-cluster/admin-svc:policyName/CPU:createdBy/bf231cd8-28c7-40f5-a3fe-f188b6098246"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "admin-svc"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 3
-    threshold = 70
-    comparison_operator = "GreaterThanThreshold"
+resource "aws_sqs_queue" "SQSQueue" {
+    delay_seconds = "0"
+    max_message_size = "262144"
+    message_retention_seconds = "300"
+    receive_wait_time_seconds = "0"
+    visibility_timeout_seconds = "30"
+    name = "day3-cluster"
 }
 
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm2" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/admin-svc-AlarmLow-78f0ac52-f229-4e15-b2f0-bfbe2fce7e73"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:003a7cdd-519c-4913-b6b5-24162a41bff3:resource/ecs/service/riot-games-cluster/admin-svc:policyName/CPU:createdBy/bf231cd8-28c7-40f5-a3fe-f188b6098246."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:003a7cdd-519c-4913-b6b5-24162a41bff3:resource/ecs/service/riot-games-cluster/admin-svc:policyName/CPU:createdBy/bf231cd8-28c7-40f5-a3fe-f188b6098246"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "admin-svc"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 15
-    threshold = 63
-    comparison_operator = "LessThanThreshold"
-}
-
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm3" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/champions-svc2-AlarmHigh-10e6dfc8-10e8-4cb9-9fee-4e31e4bccd92"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:7eae80a1-830f-4d21-86c7-868eaa9b7ff9:resource/ecs/service/riot-games-cluster/champions-svc2:policyName/CPU:createdBy/ac6666de-5cc6-4f3d-8ba1-90d53d6062d3."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:7eae80a1-830f-4d21-86c7-868eaa9b7ff9:resource/ecs/service/riot-games-cluster/champions-svc2:policyName/CPU:createdBy/ac6666de-5cc6-4f3d-8ba1-90d53d6062d3"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "champions-svc2"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 3
-    threshold = 70
-    comparison_operator = "GreaterThanThreshold"
-}
-
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm4" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/champions-svc2-AlarmLow-70894004-3fe3-46f3-aab4-b94b0c0a6a32"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:7eae80a1-830f-4d21-86c7-868eaa9b7ff9:resource/ecs/service/riot-games-cluster/champions-svc2:policyName/CPU:createdBy/ac6666de-5cc6-4f3d-8ba1-90d53d6062d3."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:7eae80a1-830f-4d21-86c7-868eaa9b7ff9:resource/ecs/service/riot-games-cluster/champions-svc2:policyName/CPU:createdBy/ac6666de-5cc6-4f3d-8ba1-90d53d6062d3"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "champions-svc2"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 15
-    threshold = 63
-    comparison_operator = "LessThanThreshold"
-}
-
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm5" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/images-svc2-AlarmHigh-dbfd9e3d-de79-4ab8-aa7c-b94cb316d076"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:1084a4ee-d39c-479e-8f36-aa9d92502bdc:resource/ecs/service/riot-games-cluster/images-svc2:policyName/CPU:createdBy/baa50698-e591-4f18-a64a-a9dda191fb79."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:1084a4ee-d39c-479e-8f36-aa9d92502bdc:resource/ecs/service/riot-games-cluster/images-svc2:policyName/CPU:createdBy/baa50698-e591-4f18-a64a-a9dda191fb79"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "images-svc2"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 3
-    threshold = 70
-    comparison_operator = "GreaterThanThreshold"
-}
-
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm6" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/images-svc2-AlarmLow-39e7f295-1c51-4ca6-a4ab-fa6ee82d9142"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:1084a4ee-d39c-479e-8f36-aa9d92502bdc:resource/ecs/service/riot-games-cluster/images-svc2:policyName/CPU:createdBy/baa50698-e591-4f18-a64a-a9dda191fb79."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:1084a4ee-d39c-479e-8f36-aa9d92502bdc:resource/ecs/service/riot-games-cluster/images-svc2:policyName/CPU:createdBy/baa50698-e591-4f18-a64a-a9dda191fb79"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "images-svc2"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 15
-    threshold = 63
-    comparison_operator = "LessThanThreshold"
-}
-
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm7" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/matches-svc2-AlarmHigh-25d0207e-e873-4296-889c-43e0d33c45cd"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:0e240839-00ea-402f-8a6e-083abbf46a5b:resource/ecs/service/riot-games-cluster/matches-svc2:policyName/CPU:createdBy/9d7c39df-7683-478d-aaac-0ca49dd2d32f."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:0e240839-00ea-402f-8a6e-083abbf46a5b:resource/ecs/service/riot-games-cluster/matches-svc2:policyName/CPU:createdBy/9d7c39df-7683-478d-aaac-0ca49dd2d32f"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "matches-svc2"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 3
-    threshold = 70
-    comparison_operator = "GreaterThanThreshold"
-}
-
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm8" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/matches-svc2-AlarmLow-a8a721ba-be0b-42a2-817d-92979546f21e"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:0e240839-00ea-402f-8a6e-083abbf46a5b:resource/ecs/service/riot-games-cluster/matches-svc2:policyName/CPU:createdBy/9d7c39df-7683-478d-aaac-0ca49dd2d32f."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:0e240839-00ea-402f-8a6e-083abbf46a5b:resource/ecs/service/riot-games-cluster/matches-svc2:policyName/CPU:createdBy/9d7c39df-7683-478d-aaac-0ca49dd2d32f"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "matches-svc2"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 15
-    threshold = 63
-    comparison_operator = "LessThanThreshold"
-}
-
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm9" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/players-svc-AlarmHigh-84b1486f-83bf-4d59-bab3-42c7301d0620"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:d6209738-68f4-4a8e-b1e7-4741019db7ed:resource/ecs/service/riot-games-cluster/players-svc:policyName/CPU:createdBy/eb8eacf1-3379-40d0-95ed-8737c02d014b."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:d6209738-68f4-4a8e-b1e7-4741019db7ed:resource/ecs/service/riot-games-cluster/players-svc:policyName/CPU:createdBy/eb8eacf1-3379-40d0-95ed-8737c02d014b"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "players-svc"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 3
-    threshold = 70
-    comparison_operator = "GreaterThanThreshold"
-}
-
-resource "aws_cloudwatch_metric_alarm" "CloudWatchAlarm10" {
-    alarm_name = "TargetTracking-service/riot-games-cluster/players-svc-AlarmLow-d87ce74f-8ff1-45a6-b2f9-8520c3679673"
-    alarm_description = "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:d6209738-68f4-4a8e-b1e7-4741019db7ed:resource/ecs/service/riot-games-cluster/players-svc:policyName/CPU:createdBy/eb8eacf1-3379-40d0-95ed-8737c02d014b."
-    actions_enabled = true
-    alarm_actions = [
-        "arn:aws:autoscaling:us-east-1:950274644703:scalingPolicy:d6209738-68f4-4a8e-b1e7-4741019db7ed:resource/ecs/service/riot-games-cluster/players-svc:policyName/CPU:createdBy/eb8eacf1-3379-40d0-95ed-8737c02d014b"
-    ]
-    metric_name = "CPUUtilization"
-    namespace = "AWS/ECS"
-    statistic = "Average"
-    dimensions {
-        ClusterName = "riot-games-cluster"
-        ServiceName = "players-svc"
-    }
-    period = 60
-    unit = "Percent"
-    evaluation_periods = 15
-    threshold = 63
-    comparison_operator = "LessThanThreshold"
+resource "aws_sqs_queue_policy" "SQSQueuePolicy" {
+    policy = "{\"Version\":\"2008-10-17\",\"Id\":\"EC2InterruptionPolicy\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"sqs.amazonaws.com\",\"events.amazonaws.com\"]},\"Action\":\"sqs:SendMessage\",\"Resource\":\"arn:aws:sqs:ap-northeast-2:226347592148:day3-cluster\"},{\"Sid\":\"DenyHTTP\",\"Effect\":\"Deny\",\"Principal\":\"*\",\"Action\":\"sqs:*\",\"Resource\":\"arn:aws:sqs:ap-northeast-2:226347592148:day3-cluster\",\"Condition\":{\"Bool\":{\"aws:SecureTransport\":\"false\"}}}]}"
+    queue_url = "https://sqs.ap-northeast-2.amazonaws.com/226347592148/day3-cluster"
 }
 
 resource "aws_cloudwatch_log_group" "LogsLogGroup" {
-    name = "/aws/codebuild/codebuild"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup2" {
-    name = "/aws/rds/instance/riotgames-db-1-ro/error"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup3" {
-    name = "/aws/rds/instance/riotgames-db-1/error"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup4" {
-    name = "/aws/rds/proxy/proxy-1734138353499-riotgames-db-1"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup5" {
-    name = "/ecs/admin-task"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup6" {
-    name = "/ecs/champions-task"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup7" {
-    name = "/ecs/images-task"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup8" {
-    name = "/ecs/matches-task"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup9" {
-    name = "/ecs/players-task"
-}
-
-resource "aws_cloudwatch_log_group" "LogsLogGroup10" {
     name = "RDSOSMetrics"
     retention_in_days = 30
 }
 
-resource "aws_cloudwatch_log_group" "LogsLogGroup11" {
-    name = "cloudfront-loggroup"
-}
-
 resource "aws_cloudwatch_log_stream" "LogsLogStream" {
-    log_group_name = "/aws/codebuild/codebuild"
-    name = "15ce4b85-e827-49ac-b710-3763e064f991"
+    log_group_name = "RDSOSMetrics"
+    name = "db-7FVUE5ITILQLHBCTASWEXKPMVY"
 }
 
 resource "aws_cloudwatch_log_stream" "LogsLogStream2" {
-    log_group_name = "/aws/codebuild/codebuild"
-    name = "9c1b7af5-896e-4977-8a4b-baab9436e53f"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream3" {
-    log_group_name = "/aws/codebuild/codebuild"
-    name = "d3d6ff94-d56a-4a45-a94b-e5b37c2aefb9"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream4" {
-    log_group_name = "/aws/rds/instance/riotgames-db-1-ro/error"
-    name = "riotgames-db-1-ro"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream5" {
-    log_group_name = "/aws/rds/instance/riotgames-db-1/error"
-    name = "riotgames-db-1"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream6" {
-    log_group_name = "/aws/rds/proxy/proxy-1734138353499-riotgames-db-1"
-    name = "proxy-1734138353499-riotgames-db-1"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream7" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/239c322c3fdf4b64a190c40760a2542a"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream8" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/2468b397148e43a0bf5f3ad04c811435"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream9" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/46b6b6a99e9b4c3cbfb324850496fa34"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream10" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/772bb18584fa48b1a0f4cd56e7f62312"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream11" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/99d37c9b18194f36b451df57a4cbba0b"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream12" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/a9b255b1b84145dbb6bba7ea67363e42"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream13" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/b1883a16f56841ca9b149136f4df050e"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream14" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/cbb8f3bb50134882b6dfce0a1f6207fe"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream15" {
-    log_group_name = "/ecs/admin-task"
-    name = "ecs/admin/cfacd9e364b345778248b0b444efbcf6"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream16" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/08ffb6e0cbf64d06bfa380f67f7c9fcc"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream17" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/0b87f5708d8544d6abf3a16a3e0b4cf8"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream18" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/0f8083ff2d2741e2964a171a43be7619"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream19" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/19a700dc4fcb4b709e56cc9595725c15"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream20" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/1a7358be57494b30a94f23da163328b5"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream21" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/28a7ab739cf545b8aa3f183a0042fc54"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream22" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/291e3aa57ba74cc6964bb84211d6c1aa"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream23" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/3084fbba4a5e4764bd78b8e3cc960bde"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream24" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/321db7a755db412093758505db4f98bd"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream25" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/42383f106caf4e54b09a77d80d7a167c"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream26" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/42cee71837ac48159d61c929ebd1f2a0"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream27" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/645e7e6465d0499b8060ec6a6ed0a59f"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream28" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/6b4961b11c0b404abc32c87fdbd1f30f"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream29" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/6ed079cb33b446b6baf27e1ba94e6315"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream30" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/7133036d38024d07b5b00166bcaf5800"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream31" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/71a90f30f7e441799efcc0310d23ab4e"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream32" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/7a5645caa40643e691618b121f3a44e4"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream33" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/9467bd896672448fbe0924330c093e78"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream34" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/949e64e08d51434dbba48acf55d402ef"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream35" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/9bf7831d44844a04b46a1d279369674b"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream36" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/a977afa871ad40b78b541de047d5a0c3"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream37" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/aa66f7e0026845ed8c6e443308443ed3"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream38" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/bb440a400d514813b56368a6a014f0d0"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream39" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/bde9e6d745cc49f7a5c7e44ef8afbd55"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream40" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/dfb598c62c4f4f5da103954d8efdafdc"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream41" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/e7ea776c032444f78a94057818ff1926"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream42" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/eb3e865110a14785a8867f4e1de730d3"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream43" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/f3f3eff57ea5411ea892e8018994560e"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream44" {
-    log_group_name = "/ecs/champions-task"
-    name = "ecs/champions/fac9a724c7cb41afa7cba4bf9647f1ed"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream45" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/07ec1588133c49099436393ac3cb2628"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream46" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/094a00cf016640ab8558a15768180617"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream47" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/0aac7e7b6e1b44bea5ca3c72c099f2de"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream48" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/10e867eefb5047b6a2decde7e2902325"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream49" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/144e0a63527a4863ab9682df61c4fcdf"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream50" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/199bfe5b7d404ddc9f7996c36a60d40c"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream51" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/1cc8680e344849b58fd7ee492b01fbae"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream52" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/1cf876bc603943a886a974d87ab97bf3"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream53" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/209ee6bed0c3444fad9f263c50d87ec9"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream54" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/232831e5b09d473d8978cb0670a4588f"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream55" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/2b8278b870534b0c8a86f1c26f07a2c0"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream56" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/38c533c75f6c4beca70a518e030a6876"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream57" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/4a2ffd67b7b34c71b61870ee98b8e239"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream58" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/5c5577fc7c084b1e920ba24da00b5655"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream59" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/61835e105d85489ca55346ec46ddb946"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream60" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/69267d5be21c4934bdb479821734927e"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream61" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/81ba11fb652540bd97788abd38195f03"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream62" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/988027adad9e4a87b625432e77542822"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream63" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/9a5c4a1d154e4966a32e9780f1131717"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream64" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/9de10ad68ead44cbadabb907cdbbb084"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream65" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/aaabfe32d22e4592a3b449acdbcdd87d"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream66" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/addbc2e7acdc40708f3258e5ac566383"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream67" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/bff9986fd1c84cdf8db862355d36ade0"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream68" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/ce6a016d72c4477e8369819f08fd5898"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream69" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/def9339a27ec473c9d52b6d315f8b288"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream70" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/e9a367a7b1bf40ebabd3dce42f5f3fe8"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream71" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/f26ed10d2c23413b937b92c3b7d22180"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream72" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/f6ab2d46171d44f6a15eb9e324a813a1"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream73" {
-    log_group_name = "/ecs/images-task"
-    name = "ecs/images/f795f1c4b7ca482cad8caca411086231"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream74" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/13e4a39a4add4b6badb76c83d4c39298"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream75" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/1fc1505dcc5b4fa5ac43cb39cfac267b"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream76" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/37408ed676844544b15b5e52d1780d5f"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream77" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/42e0134322f34de8b8411387e388c80c"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream78" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/4ceb4368cfc14335848e6eb0d6420b07"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream79" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/4f0260e5166a4d37a63e0598666058c1"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream80" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/56c0736ab4264a5d991e9bfa5b3447de"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream81" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/5c79ff98f91f406da7244a2a4466bcdc"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream82" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/5f802d1ed50b44969d1ac62843f8d8f3"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream83" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/6734b114866148259bba838c0f0abee4"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream84" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/68d3e602dea54fffa8fcf8b066ad50f1"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream85" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/714fdd2678d442648901af1d639b2f5a"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream86" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/76e6ce748df04daf82862a3adad35d52"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream87" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/7a167e3be0e84c71b64d8826ea492a38"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream88" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/8077e604e2b643748bdfddeebbcaa77f"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream89" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/82f0b8a557c04c368bd139f949751a06"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream90" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/846d3f6d96cf4ad0a5b79de49f051d34"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream91" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/8d33c088432d4b2b919d135f8f1ec2b6"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream92" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/994aeb2f69f44e8c8ed63efb193abded"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream93" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/9988598da0ed490abd7bdba8c912caaa"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream94" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/aa16d98ea59c400b9b6c0394a2a66676"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream95" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/abbae1fdcaf743c18219d3f012782755"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream96" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/becaaaee35c34d09af651ede596fd3b5"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream97" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/c85ca6549e364b0b80dc36f2f07778c5"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream98" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/cc9cd76e0f3d42f59f3b4ae57e03fe37"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream99" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/cff5a99dd2044ebb9e9fdad105703a70"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream100" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/d253919c928d459dbd2921dcbf91f7e6"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream101" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/dd0587b91a714710945a5f442d213cf8"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream102" {
-    log_group_name = "/ecs/matches-task"
-    name = "ecs/matches/fb72861ebf3847d9976f3bdded8a85af"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream103" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/0bd0250b510b447c8687a7c4a79a6d04"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream104" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/0f2dc68863594eeabdcd89a7d4d68310"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream105" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/13e4dba0ec314672ae0cf2f6af301cb6"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream106" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/14d0ed82937141baaddad262dbf7b04a"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream107" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/2223de28dc9848c282395ac92b7fa85a"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream108" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/2800bdc5e58e4a63a4145893b68c2eaf"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream109" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/34ba90c9986a4cee97fdda38565a6ec4"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream110" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/403beaacee1b49558dc87a913db4d4f4"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream111" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/5a4aa56f515c4992bb9f517bfc4da5bb"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream112" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/61a79dbd891b4c03842eb508756f5439"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream113" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/64052378ebd2486389325a2099871973"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream114" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/643bd7cd51f04f31bad8ffaac33310a1"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream115" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/70284aad93c8490cb1453b91efb44a59"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream116" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/72819f8b7c72451eaf6deb68c765b5ae"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream117" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/756dc8568b6c4256a8ffc995eeab70a6"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream118" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/759d97cd2b884bbe8ff7da4a78d71d5f"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream119" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/7a676a380d4f493f8ecaa1bcf1e354e2"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream120" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/867a28fba3d547e18dd9f0a8e379c658"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream121" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/87c9e74a2f844e74a873feece9038749"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream122" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/90d079de099e451db226baf426be3ea0"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream123" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/92db709a42f64f7fa80aa32171f27a4e"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream124" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/99f9e1467127491397776b127f3697cf"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream125" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/cd8b4ff9f2b74b7387b2bc7653cdd634"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream126" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/ddb7a4f9d0234616b5f7bea073cdff2f"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream127" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/e8866ba165294ddab44b4dc687e3b934"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream128" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/f302bb985a2f40e681c4197e77261fbd"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream129" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/f90613b35c9249a3a2b3c66fcfa181f8"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream130" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/f906d8ab09f94e12a7be5cc5b517a1e7"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream131" {
-    log_group_name = "/ecs/players-task"
-    name = "ecs/players/f9a72fe3e43b49c6ac46bd748c810416"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream132" {
     log_group_name = "RDSOSMetrics"
-    name = "db-YKLLNPM5VP3FJ3EOZ3CDGHWOME"
+    name = "db-RG2DGOI2VTD4N77JKYRCYTEZEQ"
 }
 
-resource "aws_cloudwatch_log_stream" "LogsLogStream133" {
-    log_group_name = "RDSOSMetrics"
-    name = "db-YKLLNPM5VP3FJ3EOZ3CDGHWOME-secondary"
-}
-
-resource "aws_cloudwatch_log_stream" "LogsLogStream134" {
-    log_group_name = "cloudfront-loggroup"
-    name = "CloudFront_E2K8GVPWOYTV6"
+resource "aws_cloudfront_distribution" "CloudFrontDistribution" {
+    origin {
+        custom_origin_config {
+            http_port = 80
+            https_port = 443
+            origin_keepalive_timeout = 5
+            origin_protocol_policy = "http-only"
+            origin_read_timeout = 30
+            origin_ssl_protocols = [
+                "SSLv3",
+                "TLSv1",
+                "TLSv1.1",
+                "TLSv1.2"
+            ]
+        }
+        domain_name = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        origin_id = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        
+        origin_path = ""
+    }
+    default_cache_behavior {
+        allowed_methods = [
+            "HEAD",
+            "DELETE",
+            "POST",
+            "GET",
+            "OPTIONS",
+            "PUT",
+            "PATCH"
+        ]
+        compress = true
+        smooth_streaming  = false
+        target_origin_id = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        viewer_protocol_policy = "allow-all"
+    }
+    ordered_cache_behavior {
+        allowed_methods = [
+            "HEAD",
+            "GET"
+        ]
+        compress = false
+        path_pattern = "/*.js"
+        smooth_streaming = false
+        target_origin_id = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        viewer_protocol_policy = "allow-all"
+    }
+    ordered_cache_behavior {
+        allowed_methods = [
+            "HEAD",
+            "GET"
+        ]
+        compress = false
+        path_pattern = "/*.jpg"
+        smooth_streaming = false
+        target_origin_id = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        viewer_protocol_policy = "allow-all"
+    }
+    ordered_cache_behavior {
+        allowed_methods = [
+            "HEAD",
+            "GET"
+        ]
+        compress = false
+        path_pattern = "/*.jpeg"
+        smooth_streaming = false
+        target_origin_id = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        viewer_protocol_policy = "allow-all"
+    }
+    ordered_cache_behavior {
+        allowed_methods = [
+            "HEAD",
+            "GET"
+        ]
+        compress = false
+        path_pattern = "/*.gif"
+        smooth_streaming = false
+        target_origin_id = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        viewer_protocol_policy = "allow-all"
+    }
+    ordered_cache_behavior {
+        allowed_methods = [
+            "HEAD",
+            "GET"
+        ]
+        compress = false
+        path_pattern = "/*.css"
+        smooth_streaming = false
+        target_origin_id = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        viewer_protocol_policy = "allow-all"
+    }
+    ordered_cache_behavior {
+        allowed_methods = [
+            "HEAD",
+            "GET"
+        ]
+        compress = false
+        path_pattern = "/*.png"
+        smooth_streaming = false
+        target_origin_id = "day3-ingress-alb-74394715.ap-northeast-2.elb.amazonaws.com"
+        viewer_protocol_policy = "allow-all"
+    }
+    comment = ""
+    price_class = "PriceClass_All"
+    enabled = false
+    viewer_certificate {
+        cloudfront_default_certificate = true
+        minimum_protocol_version = "TLSv1"
+        ssl_support_method = "vip"
+    }
+    restrictions {
+        geo_restriction {
+            restriction_type = "none"
+        }
+    }
+    http_version = "http2"
+    is_ipv6_enabled = false
 }
 
 resource "aws_ecr_repository" "ECRRepository" {
-    name = "riotgames-application-repo"
+    name = "day3-repo"
 }
 
-resource "aws_ecs_cluster" "ECSCluster" {
-    name = "riot-games-cluster"
-}
-
-resource "aws_ecs_service" "ECSService" {
-    name = "images-svc2"
-    cluster = "arn:aws:ecs:us-east-1:950274644703:cluster/riot-games-cluster"
-    service_registries {
-        registry_arn = "arn:aws:servicediscovery:us-east-1:950274644703:service/srv-aklpqz6itjfbm5nk"
-    }
-    desired_count = 2
-    platform_version = "LATEST"
-    task_definition = "${aws_ecs_task_definition.ECSTaskDefinition3.arn}"
-    deployment_maximum_percent = 200
-    deployment_minimum_healthy_percent = 100
-    iam_role = "arn:aws:iam::950274644703:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
-    network_configuration {
-        assign_public_ip = "DISABLED"
-        security_groups = [
-            "${aws_security_group.EC2SecurityGroup3.id}"
+resource "aws_eks_cluster" "EKSCluster" {
+    name = "day3-cluster"
+    role_arn = "${aws_iam_role.IAMRole6.arn}"
+    version = "1.31"
+    vpc_config {
+        security_group_ids = [
+            "${aws_security_group.EC2SecurityGroup5.id}"
         ]
-        subnets = [
-            "subnet-0ed83f8d0a5aee854",
-            "subnet-01a6cf3e86c0e6af2"
+        subnet_ids = [
+            "subnet-058dd7f42efa52d29",
+            "subnet-07f8030461b6aac64",
+            "subnet-01c96e4762e568238",
+            "subnet-05ed591a8b84b42c2",
+            "subnet-08144f18ea0fc04b2",
+            "subnet-07b66daa182167f3c"
         ]
     }
-    health_check_grace_period_seconds = 0
-    scheduling_strategy = "REPLICA"
-}
-
-resource "aws_ecs_service" "ECSService2" {
-    name = "players-svc"
-    cluster = "arn:aws:ecs:us-east-1:950274644703:cluster/riot-games-cluster"
-    service_registries {
-        registry_arn = "arn:aws:servicediscovery:us-east-1:950274644703:service/srv-av6tdzlp5wmgqijs"
-    }
-    desired_count = 2
-    platform_version = "LATEST"
-    task_definition = "${aws_ecs_task_definition.ECSTaskDefinition.arn}"
-    deployment_maximum_percent = 200
-    deployment_minimum_healthy_percent = 100
-    iam_role = "arn:aws:iam::950274644703:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
-    network_configuration {
-        assign_public_ip = "DISABLED"
-        security_groups = [
-            "${aws_security_group.EC2SecurityGroup3.id}"
-        ]
-        subnets = [
-            "subnet-0ed83f8d0a5aee854",
-            "subnet-01a6cf3e86c0e6af2"
-        ]
-    }
-    health_check_grace_period_seconds = 0
-    scheduling_strategy = "REPLICA"
-}
-
-resource "aws_ecs_service" "ECSService3" {
-    name = "admin-svc"
-    cluster = "arn:aws:ecs:us-east-1:950274644703:cluster/riot-games-cluster"
-    load_balancer {
-        target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:950274644703:targetgroup/admin-tg1/9b5641b080bf69e1"
-        container_name = "admin"
-        container_port = 8501
-    }
-    desired_count = 2
-    platform_version = "LATEST"
-    task_definition = "${aws_ecs_task_definition.ECSTaskDefinition5.arn}"
-    deployment_maximum_percent = 200
-    deployment_minimum_healthy_percent = 100
-    iam_role = "arn:aws:iam::950274644703:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
-    network_configuration {
-        assign_public_ip = "DISABLED"
-        security_groups = [
-            "${aws_security_group.EC2SecurityGroup.id}"
-        ]
-        subnets = [
-            "subnet-0ed83f8d0a5aee854",
-            "subnet-01a6cf3e86c0e6af2"
-        ]
-    }
-    health_check_grace_period_seconds = 0
-    scheduling_strategy = "REPLICA"
-}
-
-resource "aws_ecs_service" "ECSService4" {
-    name = "champions-svc2"
-    cluster = "arn:aws:ecs:us-east-1:950274644703:cluster/riot-games-cluster"
-    service_registries {
-        registry_arn = "arn:aws:servicediscovery:us-east-1:950274644703:service/srv-m2qcy5tx62jggzlf"
-    }
-    desired_count = 2
-    platform_version = "LATEST"
-    task_definition = "${aws_ecs_task_definition.ECSTaskDefinition4.arn}"
-    deployment_maximum_percent = 200
-    deployment_minimum_healthy_percent = 100
-    iam_role = "arn:aws:iam::950274644703:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
-    network_configuration {
-        assign_public_ip = "DISABLED"
-        security_groups = [
-            "${aws_security_group.EC2SecurityGroup3.id}"
-        ]
-        subnets = [
-            "subnet-0ed83f8d0a5aee854",
-            "subnet-01a6cf3e86c0e6af2"
-        ]
-    }
-    health_check_grace_period_seconds = 0
-    scheduling_strategy = "REPLICA"
-}
-
-resource "aws_ecs_service" "ECSService5" {
-    name = "matches-svc2"
-    cluster = "arn:aws:ecs:us-east-1:950274644703:cluster/riot-games-cluster"
-    service_registries {
-        registry_arn = "arn:aws:servicediscovery:us-east-1:950274644703:service/srv-pn367ugc5wp2dxnr"
-    }
-    desired_count = 2
-    platform_version = "LATEST"
-    task_definition = "${aws_ecs_task_definition.ECSTaskDefinition2.arn}"
-    deployment_maximum_percent = 200
-    deployment_minimum_healthy_percent = 100
-    iam_role = "arn:aws:iam::950274644703:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
-    network_configuration {
-        assign_public_ip = "DISABLED"
-        security_groups = [
-            "${aws_security_group.EC2SecurityGroup3.id}"
-        ]
-        subnets = [
-            "subnet-0ed83f8d0a5aee854",
-            "subnet-01a6cf3e86c0e6af2"
-        ]
-    }
-    health_check_grace_period_seconds = 0
-    scheduling_strategy = "REPLICA"
-}
-
-resource "aws_ecs_task_definition" "ECSTaskDefinition" {
-    container_definitions = "[{\"name\":\"players\",\"image\":\"950274644703.dkr.ecr.us-east-1.amazonaws.com/riotgames-application-repo:players\",\"cpu\":0,\"portMappings\":[{\"containerPort\":8080,\"hostPort\":8080,\"protocol\":\"tcp\",\"name\":\"players-8080-tcp\",\"appProtocol\":\"http\"}],\"essential\":true,\"environment\":[],\"environmentFiles\":[],\"mountPoints\":[],\"volumesFrom\":[],\"ulimits\":[],\"logConfiguration\":{\"logDriver\":\"awslogs\",\"options\":{\"awslogs-group\":\"/ecs/players-task\",\"mode\":\"non-blocking\",\"awslogs-create-group\":\"true\",\"max-buffer-size\":\"25m\",\"awslogs-region\":\"us-east-1\",\"awslogs-stream-prefix\":\"ecs\"},\"secretOptions\":[]},\"systemControls\":[]}]"
-    family = "players-task"
-    execution_role_arn = "${aws_iam_role.IAMRole4.arn}"
-    network_mode = "awsvpc"
-    requires_compatibilities = [
-        "FARGATE"
-    ]
-    cpu = "1024"
-    memory = "3072"
-}
-
-resource "aws_ecs_task_definition" "ECSTaskDefinition2" {
-    container_definitions = "[{\"name\":\"matches\",\"image\":\"950274644703.dkr.ecr.us-east-1.amazonaws.com/riotgames-application-repo:matches\",\"cpu\":0,\"portMappings\":[{\"containerPort\":8080,\"hostPort\":8080,\"protocol\":\"tcp\",\"name\":\"matches-8080-tcp\",\"appProtocol\":\"http\"}],\"essential\":true,\"environment\":[],\"environmentFiles\":[],\"mountPoints\":[],\"volumesFrom\":[],\"ulimits\":[],\"logConfiguration\":{\"logDriver\":\"awslogs\",\"options\":{\"awslogs-group\":\"/ecs/matches-task\",\"mode\":\"non-blocking\",\"awslogs-create-group\":\"true\",\"max-buffer-size\":\"25m\",\"awslogs-region\":\"us-east-1\",\"awslogs-stream-prefix\":\"ecs\"},\"secretOptions\":[]},\"systemControls\":[]}]"
-    family = "matches-task"
-    execution_role_arn = "${aws_iam_role.IAMRole4.arn}"
-    network_mode = "awsvpc"
-    requires_compatibilities = [
-        "FARGATE"
-    ]
-    cpu = "1024"
-    memory = "3072"
-}
-
-resource "aws_ecs_task_definition" "ECSTaskDefinition3" {
-    container_definitions = "[{\"name\":\"images\",\"image\":\"950274644703.dkr.ecr.us-east-1.amazonaws.com/riotgames-application-repo:images\",\"cpu\":0,\"portMappings\":[{\"containerPort\":8080,\"hostPort\":8080,\"protocol\":\"tcp\",\"name\":\"images-8080-tcp\",\"appProtocol\":\"http\"}],\"essential\":true,\"environment\":[],\"environmentFiles\":[],\"mountPoints\":[],\"volumesFrom\":[],\"ulimits\":[],\"logConfiguration\":{\"logDriver\":\"awslogs\",\"options\":{\"awslogs-group\":\"/ecs/images-task\",\"mode\":\"non-blocking\",\"awslogs-create-group\":\"true\",\"max-buffer-size\":\"25m\",\"awslogs-region\":\"us-east-1\",\"awslogs-stream-prefix\":\"ecs\"},\"secretOptions\":[]},\"systemControls\":[]}]"
-    family = "images-task"
-    execution_role_arn = "${aws_iam_role.IAMRole4.arn}"
-    network_mode = "awsvpc"
-    requires_compatibilities = [
-        "FARGATE"
-    ]
-    cpu = "1024"
-    memory = "3072"
-}
-
-resource "aws_ecs_task_definition" "ECSTaskDefinition4" {
-    container_definitions = "[{\"name\":\"champions\",\"image\":\"950274644703.dkr.ecr.us-east-1.amazonaws.com/riotgames-application-repo:champions\",\"cpu\":0,\"portMappings\":[{\"containerPort\":8080,\"hostPort\":8080,\"protocol\":\"tcp\",\"name\":\"champions-8080-tcp\",\"appProtocol\":\"http\"}],\"essential\":true,\"environment\":[],\"environmentFiles\":[],\"mountPoints\":[],\"volumesFrom\":[],\"ulimits\":[],\"logConfiguration\":{\"logDriver\":\"awslogs\",\"options\":{\"awslogs-group\":\"/ecs/champions-task\",\"mode\":\"non-blocking\",\"awslogs-create-group\":\"true\",\"max-buffer-size\":\"25m\",\"awslogs-region\":\"us-east-1\",\"awslogs-stream-prefix\":\"ecs\"},\"secretOptions\":[]},\"systemControls\":[]}]"
-    family = "champions-task"
-    execution_role_arn = "${aws_iam_role.IAMRole4.arn}"
-    network_mode = "awsvpc"
-    requires_compatibilities = [
-        "FARGATE"
-    ]
-    cpu = "1024"
-    memory = "3072"
-}
-
-resource "aws_ecs_task_definition" "ECSTaskDefinition5" {
-    container_definitions = "[{\"name\":\"admin\",\"image\":\"950274644703.dkr.ecr.us-east-1.amazonaws.com/riotgames-application-repo:admin\",\"cpu\":0,\"portMappings\":[{\"containerPort\":8501,\"hostPort\":8501,\"protocol\":\"tcp\",\"name\":\"admin-8000-tcp\",\"appProtocol\":\"http\"}],\"essential\":true,\"environment\":[],\"environmentFiles\":[],\"mountPoints\":[],\"volumesFrom\":[],\"ulimits\":[],\"logConfiguration\":{\"logDriver\":\"awslogs\",\"options\":{\"awslogs-group\":\"/ecs/admin-task\",\"mode\":\"non-blocking\",\"awslogs-create-group\":\"true\",\"max-buffer-size\":\"25m\",\"awslogs-region\":\"us-east-1\",\"awslogs-stream-prefix\":\"ecs\"},\"secretOptions\":[]},\"systemControls\":[]}]"
-    family = "admin-task"
-    execution_role_arn = "${aws_iam_role.IAMRole4.arn}"
-    network_mode = "awsvpc"
-    requires_compatibilities = [
-        "FARGATE"
-    ]
-    cpu = "1024"
-    memory = "3072"
 }
 
 resource "aws_neptune_subnet_group" "NeptuneDBSubnetGroup" {
-    name = "mysql-db-subnet-group"
-    description = "mysql-db-subnet-group"
+    name = "day3-aurora-mysql-sgp"
+    description = "day3-aurora-mysql-sgp"
     subnet_ids = [
-        "subnet-00c0efcb0614db99c",
-        "subnet-08436219347ee30dd"
+        "subnet-05ed591a8b84b42c2",
+        "subnet-08144f18ea0fc04b2",
+        "subnet-07b66daa182167f3c"
     ]
 }
 
 resource "aws_docdb_subnet_group" "DocDBDBSubnetGroup" {
-    name = "mysql-db-subnet-group"
-    description = "mysql-db-subnet-group"
+    name = "day3-aurora-mysql-sgp"
+    description = "day3-aurora-mysql-sgp"
     subnet_ids = [
-        "subnet-00c0efcb0614db99c",
-        "subnet-08436219347ee30dd"
+        "subnet-05ed591a8b84b42c2",
+        "subnet-08144f18ea0fc04b2",
+        "subnet-07b66daa182167f3c"
     ]
 }
 
-resource "aws_service_discovery_http_namespace" "ServiceDiscoveryHttpNamespace" {
-    name = "riot-games-cluster"
+resource "aws_ses_configuration_set" "SESConfigurationSet" {
+    name = "configuration-set"
 }
 
-resource "aws_service_discovery_http_namespace" "ServiceDiscoveryHttpNamespace2" {
-    name = "champions"
+resource "aws_cloudwatch_event_rule" "EventsRule" {
+    name = "AutoScalingManagedRule"
+    description = "This rule is used to route Instance notifications to EC2 Auto Scaling"
+    event_pattern = "{\"source\":[\"aws.ec2\"],\"detail-type\":[\"EC2 Instance Rebalance Recommendation\",\"EC2 Spot Instance Interruption Warning\"]}"
 }
 
-resource "aws_service_discovery_private_dns_namespace" "ServiceDiscoveryPrivateDnsNamespace" {
-    name = "matches"
+resource "aws_cloudwatch_event_target" "CloudWatchEventTarget" {
+    rule = "AutoScalingManagedRule"
+    arn = "arn:aws:events:ap-northeast-2:226347592148:rule/AutoScalingManagedRule"
 }
 
-resource "aws_service_discovery_private_dns_namespace" "ServiceDiscoveryPrivateDnsNamespace2" {
-    name = "champions"
+resource "aws_cloudwatch_event_rule" "EventsRule2" {
+    name = "Karpenter-day3-cluster-RebalanceRule-L3oo87RvybLe"
+    event_pattern = "{\"detail-type\":[\"EC2 Instance Rebalance Recommendation\"],\"source\":[\"aws.ec2\"]}"
 }
 
-resource "aws_service_discovery_private_dns_namespace" "ServiceDiscoveryPrivateDnsNamespace3" {
-    name = "images"
+resource "aws_cloudwatch_event_target" "CloudWatchEventTarget2" {
+    rule = "Karpenter-day3-cluster-RebalanceRule-L3oo87RvybLe"
+    arn = "arn:aws:events:ap-northeast-2:226347592148:rule/Karpenter-day3-cluster-RebalanceRule-L3oo87RvybLe"
 }
 
-resource "aws_service_discovery_private_dns_namespace" "ServiceDiscoveryPrivateDnsNamespace4" {
-    name = "players"
+resource "aws_cloudwatch_event_rule" "EventsRule3" {
+    name = "Karpenter-day3-cluster-InstanceStateChangeRule-oz9LIRxLlnDD"
+    event_pattern = "{\"detail-type\":[\"EC2 Instance State-change Notification\"],\"source\":[\"aws.ec2\"]}"
 }
 
-resource "aws_service_discovery_service" "ServiceDiscoveryService" {
-    name = "matches"
-    dns_config {
-        dns_records = [
-            {
-                ttl = 15
-                type = "A"
-            }
-        ]
-        namespace_id = "ns-7qmcglzyppsfaqd4"
-        routing_policy = "MULTIVALUE"
-    }
-    health_check_custom_config {
-        failure_threshold = 1
-    }
+resource "aws_cloudwatch_event_target" "CloudWatchEventTarget3" {
+    rule = "Karpenter-day3-cluster-InstanceStateChangeRule-oz9LIRxLlnDD"
+    arn = "arn:aws:events:ap-northeast-2:226347592148:rule/Karpenter-day3-cluster-InstanceStateChangeRule-oz9LIRxLlnDD"
 }
 
-resource "aws_service_discovery_service" "ServiceDiscoveryService2" {
-    name = "players"
-    dns_config {
-        dns_records = [
-            {
-                ttl = 15
-                type = "A"
-            }
-        ]
-        namespace_id = "ns-quocciq36fg7phsu"
-        routing_policy = "MULTIVALUE"
-    }
-    health_check_custom_config {
-        failure_threshold = 1
-    }
+resource "aws_cloudwatch_event_rule" "EventsRule4" {
+    name = "Karpenter-day3-cluster-SpotInterruptionRule-QdNqmD5hWauW"
+    event_pattern = "{\"detail-type\":[\"EC2 Spot Instance Interruption Warning\"],\"source\":[\"aws.ec2\"]}"
 }
 
-resource "aws_service_discovery_service" "ServiceDiscoveryService3" {
-    name = "images"
-    dns_config {
-        dns_records = [
-            {
-                ttl = 15
-                type = "A"
-            }
-        ]
-        namespace_id = "ns-5z3iv6uanb4s3wbi"
-        routing_policy = "MULTIVALUE"
-    }
-    health_check_custom_config {
-        failure_threshold = 1
-    }
+resource "aws_cloudwatch_event_target" "CloudWatchEventTarget4" {
+    rule = "Karpenter-day3-cluster-SpotInterruptionRule-QdNqmD5hWauW"
+    arn = "arn:aws:events:ap-northeast-2:226347592148:rule/Karpenter-day3-cluster-SpotInterruptionRule-QdNqmD5hWauW"
 }
 
-resource "aws_service_discovery_service" "ServiceDiscoveryService4" {
-    name = "champions"
-    dns_config {
-        dns_records = [
-            {
-                ttl = 15
-                type = "A"
-            }
-        ]
-        namespace_id = "ns-57xojxxk2z2efrnn"
-        routing_policy = "MULTIVALUE"
-    }
-    health_check_custom_config {
-        failure_threshold = 1
-    }
+resource "aws_cloudwatch_event_rule" "EventsRule5" {
+    name = "Karpenter-day3-cluster-ScheduledChangeRule-luvVimFX6uxP"
+    event_pattern = "{\"detail-type\":[\"AWS Health Event\"],\"source\":[\"aws.health\"]}"
 }
 
-resource "aws_secretsmanager_secret" "SecretsManagerSecret" {
-    name = "rds-db-credentials/db-YKLLNPM5VP3FJ3EOZ3CDGHWOME/root/1734138350766"
-    description = "RDS database root credentials for riotgames-db-1"
-}
-
-resource "aws_secretsmanager_secret_version" "SecretsManagerSecretVersion" {
-    secret_id = "${aws_secretsmanager_secret.SecretsManagerSecret.id}"
-    secret_string = "{\"dbInstanceIdentifier\":\"riotgames-db-1\",\"engine\":\"mysql\",\"resourceId\":\"db-YKLLNPM5VP3FJ3EOZ3CDGHWOME\",\"username\":\"root\",\"password\":\"Skill53##\"}"
+resource "aws_cloudwatch_event_target" "CloudWatchEventTarget5" {
+    rule = "Karpenter-day3-cluster-ScheduledChangeRule-luvVimFX6uxP"
+    arn = "arn:aws:events:ap-northeast-2:226347592148:rule/Karpenter-day3-cluster-ScheduledChangeRule-luvVimFX6uxP"
 }

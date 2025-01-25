@@ -13,7 +13,7 @@ provider "aws" {
 
 resource "aws_iam_user" "IAMUser" {
     path = "/"
-    name = "admin"
+    name = "admins"
     tags = {}
 }
 

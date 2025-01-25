@@ -688,6 +688,12 @@ resource "aws_eip_association" "EC2EIPAssociation" {
     private_ip_address = "10.0.3.204"
 }
 
+
+
+
+
+
+
 resource "aws_eip" "EC2EIP2" {
     vpc = true
 }
